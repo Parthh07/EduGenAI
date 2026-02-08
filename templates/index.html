@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduGen | Exam Master</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <div class="bg-art">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div id="loader" class="loader-overlay">
+        <div class="art-spinner mb-4"></div>
+        <h3 class="fw-light text-white" style="letter-spacing: 2px;">GENERATING...</h3>
+    </div>
+
+    <nav class="sidebar">
+        <div class="sidebar-brand">EduGen<span style="color:var(--accent)">.ai</span></div>
+        <div class="d-flex flex-column gap-2 px-2">
+            <div class="nav-link active" onclick="showSection('uploadSection', this)">
+                <i class="fa-solid fa-layer-group"></i> <span>Studio</span>
+            </div>
+            <div class="nav-link" onclick="showSection('notesSection', this)">
+                <i class="fa-solid fa-pen-nib"></i> <span>Notes</span>
+            </div>
+            <div class="nav-link" onclick="showSection('quizSection', this)">
+                <i class="fa-solid fa-graduation-cap"></i> <span>Exam Mode</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        
+        <div id="uploadSection" class="section" style="display: block;">
+            <div class="mb-5">
+                <h1 class="display-3 fw-bold">The Studio</h1>
+                <p class="text-white-50 fs-5">Upload document OR paste raw text.</p>
+            </div>
+            
+            <div class="art-card">
+                <ul class="nav nav-pills mb-4 justify-content-center">
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light rounded-pill px-4 active me-2" id="btn-file" onclick="toggleUploadMode('file')">
+                            <i class="fa-solid fa-file-arrow-up"></i> Upload File
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <button class="btn btn-outline-light rounded-pill px-4" id="btn-text" onclick="toggleUploadMode('text')">
+                            <i class="fa-solid fa-keyboard"></i> Paste Text
+                        </button>
+                    </li>
+                </ul>
+
+                <div id="file-mode">
+                    <div class="upload-zone" onclick="document.getElementById('docFile').click()">
+                        <i class="fa-solid fa-cloud-arrow-up fa-3x mb-3 text-white-50"></i>
+                        <h4 class="fw-bold">Drop Document Here</h4>
+                        <p class="text-white-50 small">.pdf, .docx, .pptx, .txt</p>
+                        <input type="file" id="docFile" class="d-none" accept=".pdf,.docx,.pptx,.txt" onchange="handleFileSelect(this)">
+                    </div>
+                    <div id="fileName" class="text-center mt-4"></div>
+                    <div class="text-center mt-4">
+                        <button class="btn btn-art" onclick="uploadDoc()">Initiate File</button>
+                    </div>
+                </div>
+
+                <div id="text-mode" style="display: none;">
+                    <textarea id="rawText" class="form-control bg-dark text-white border-secondary mb-3" rows="10" placeholder="Paste your study text here..."></textarea>
+                    <div class="text-center">
+                        <button class="btn btn-art" onclick="uploadRawText()">Initiate Text</button>
+                    </div>
+                </div>
+                <div id="uploadStatus" class="text-center mt-3"></div>
+            </div>
+        </div>
+
+        <div id="notesSection" class="section">
+            <div class="d-flex justify-content-between align-items-end mb-5">
+                <div>
+                    <h1 class="display-4 fw-bold">Curated Notes</h1>
+                    <p class="text-white-50">AI generated insights.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-light rounded-pill px-3" onclick="copyToClipboard('notesContent')">
+                        <i class="fa-regular fa-copy"></i> Copy
+                    </button>
+                    <button class="btn btn-art rounded-pill px-4" onclick="generateNotes()">Generate</button>
+                </div>
+            </div>
+            
+            <div class="mb-4 p-3 rounded" style="background:rgba(255,255,255,0.05)">
+                <label class="text-white-50 small fw-bold text-uppercase">Depth Control</label>
+                <input type="range" class="form-range mt-2" min="1" max="3" step="1" id="detailSlider" value="2">
+                <div class="d-flex justify-content-between text-white-50 small">
+                    <span>Brief</span><span>Standard</span><span>Detailed</span>
+                </div>
+            </div>
+
+            <div id="notesContent" class="art-card">
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-shapes fa-3x mb-3 text-white-50"></i>
+                    <p class="text-white-50">Canvas is empty.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="quizSection" class="section">
+            <div class="d-flex justify-content-between align-items-end mb-5">
+                <div>
+                    <h1 class="display-4 fw-bold">Exam Mode</h1>
+                    <p class="text-white-50">Test your mastery with specific formats.</p>
+                </div>
+                
+                <div class="d-flex gap-2 align-items-center">
+                    <div class="form-check form-switch me-3">
+                        <input class="form-check-input" type="checkbox" id="solvedToggle" onchange="toggleAnswers()">
+                        <label class="form-check-label text-white small" for="solvedToggle">Show Answers</label>
+                    </div>
+
+                    <button class="btn btn-art" onclick="generateQuiz()">Generate</button>
+                </div>
+            </div>
+
+            <div class="art-card mb-4 py-3 px-4 d-flex gap-4 align-items-center flex-wrap">
+                <div>
+                    <label class="text-white-50 small fw-bold d-block mb-1">TYPE</label>
+                    <select id="quizType" class="form-select bg-dark text-white border-secondary rounded-pill" onchange="updateQuizControls()">
+                        <option value="mcq">MCQ Quiz</option>
+                        <option value="theory">Theory Questions</option>
+                    </select>
+                </div>
+
+                <div id="theoryControls" style="display:none;">
+                    <label class="text-white-50 small fw-bold d-block mb-1">MARKS CATEGORY</label>
+                    <select id="marksCategory" class="form-select bg-dark text-white border-secondary rounded-pill">
+                        <option value="2">2 Marks (Short)</option>
+                        <option value="6">6 Marks (Medium)</option>
+                        <option value="10">10 Marks (Long)</option>
+                    </select>
+                </div>
+
+                <div id="mcqControls">
+                    <label class="text-white-50 small fw-bold d-block mb-1">DIFFICULTY</label>
+                    <select id="difficultySelector" class="form-select bg-dark text-white border-secondary rounded-pill">
+                        <option value="Easy">Easy</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Hard">Hard</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="quizContent" class="row g-4"></div>
+        </div>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
