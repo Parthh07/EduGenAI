@@ -1,7 +1,5 @@
 flask
+flask-cors
 google-generativeai
-PyPDF2
-python-docx
-python-pptx
 python-dotenv
-gTTS
+PyPDF2
