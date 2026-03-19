@@ -5,42 +5,47 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-6 selection:bg-blue-500/30 relative">
+    <div className="min-h-screen bg-[#030712] text-white flex flex-col items-center justify-center p-6 sm:p-12 selection:bg-indigo-500/30 relative overflow-hidden">
+      
+      {/* Ambient Canvas Glows */}
+      <div className="absolute top-[-20%] left-[-10%] w-[500px] h-[500px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+      <div className="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none mix-blend-screen" />
+      <div className="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-cyan-600/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
+
       <button 
         onClick={() => router.push('/profile')}
-        className="absolute top-6 right-6 flex items-center gap-3 bg-slate-900/80 border border-slate-700 px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all shadow-lg hover:shadow-blue-900/20 hover:border-blue-500/50"
+        className="absolute top-6 right-6 flex items-center gap-3 bg-white/[0.03] border border-white/10 px-5 py-2.5 rounded-full hover:bg-white/[0.08] transition-all shadow-2xl backdrop-blur-xl group z-50 hover:border-indigo-500/50 hover:scale-105 active:scale-95 duration-300"
       >
-        <span className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-bold">👤</span>
-        <span className="font-semibold text-slate-200 tracking-wide text-sm hidden sm:block">My Account</span>
+        <span className="w-8 h-8 rounded-full bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm font-bold group-hover:bg-indigo-500 group-hover:text-white transition-colors duration-300">👤</span>
+        <span className="font-semibold text-slate-300 tracking-wide text-sm hidden sm:block group-hover:text-white transition-colors">My Account</span>
       </button>
 
-      <div className="max-w-3xl w-full text-center space-y-8">
-        <header className="space-y-4">
-          <div className="inline-block p-1 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 mb-2">
-            <div className="bg-slate-950 rounded-full px-6 py-2 text-sm font-medium">
-              v2.0 Update Active
+      <div className="max-w-4xl w-full text-center space-y-12 z-10">
+        <header className="space-y-6 animate-in fade-in slide-in-from-bottom-10 duration-1000 ease-out">
+          <div className="inline-flex p-[1px] rounded-full bg-gradient-to-r from-indigo-500/50 via-purple-500/50 to-cyan-500/50 mb-4 shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+            <div className="bg-[#030712]/90 backdrop-blur-xl rounded-full px-6 py-2 text-xs font-semibold tracking-widest uppercase text-slate-300 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span> v3.0 Update Active
             </div>
           </div>
-          <h1 className="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">EduGen AI</h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-            Your intelligent learning companion. Generate targeted study materials from your documents or test your knowledge in exam mode.
+          <h1 className="text-6xl md:text-8xl font-black tracking-tighter bg-gradient-to-br from-white via-slate-200 to-slate-500 bg-clip-text text-transparent drop-shadow-sm">
+            EduGen AI
+          </h1>
+          <p className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-light tracking-wide">
+            Your incredibly intelligent learning companion. Generate study materials, pass exams, and chat with your documents.
           </p>
-        </header>
-
-        <div className="grid md:grid-cols-2 gap-6 pt-8 w-full max-w-5xl mx-auto">
+        </header>        <div className="grid md:grid-cols-2 gap-5 pt-8 w-full max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-20 duration-1000 delay-150 ease-out fill-mode-both">
           {/* Study Mode Card */}
           <div 
             onClick={() => router.push('/study')}
-            className="group cursor-pointer bg-slate-900/50 border border-slate-800 hover:border-blue-500/50 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col justify-between"
+            className="group cursor-pointer bg-white/[0.02] hover:bg-white/[0.04] border border-white/5 hover:border-indigo-500/30 backdrop-blur-2xl p-8 rounded-[2rem] shadow-2xl hover:shadow-[0_0_40px_rgba(99,102,241,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 text-left relative overflow-hidden flex flex-col justify-between"
           >
-            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-              <span className="text-8xl">📚</span>
-            </div>
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-colors duration-500" />
+            <div className="absolute top-6 right-8 text-5xl opacity-80 group-hover:scale-110 transition-transform duration-500 drop-shadow-lg">📚</div>
             <div>
-              <h2 className="text-2xl font-bold text-slate-100 mb-3 group-hover:text-blue-400 transition-colors">📘 Study Material</h2>
-              <p className="text-slate-400 mb-6 relative z-10">Upload your PDFs and instantly generate comprehensive Q&A pairs. Export to Anki or listen via Audio.</p>
+              <h2 className="text-2xl font-bold tracking-tight text-white mb-3 group-hover:text-indigo-400 transition-colors">Study Material</h2>
+              <p className="text-slate-400/90 mb-8 relative z-10 leading-relaxed text-[15px] font-medium">Upload multi-page PDFs to instantly synthesize comprehensive Q&A pairs. Export to Anki or listen via Audio.</p>
             </div>
-            <span className="inline-flex items-center text-blue-400 font-semibold group-hover:gap-2 transition-all">
+            <span className="inline-flex items-center text-indigo-400 font-bold group-hover:gap-3 transition-all tracking-wide text-sm uppercase">
               Start Studying &rarr;
             </span>
           </div>
@@ -48,16 +53,15 @@ export default function Home() {
           {/* Exam Mode Card */}
           <div 
             onClick={() => router.push('/exam')}
-            className="group cursor-pointer bg-slate-900/50 border border-slate-800 hover:border-cyan-500/50 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col justify-between"
+            className="group cursor-pointer bg-white/[0.02] hover:bg-white/[0.04] border border-white/5 hover:border-cyan-500/30 backdrop-blur-2xl p-8 rounded-[2rem] shadow-2xl hover:shadow-[0_0_40px_rgba(6,182,212,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 text-left relative overflow-hidden flex flex-col justify-between"
           >
-            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-              <span className="text-8xl">⏱️</span>
-            </div>
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl group-hover:bg-cyan-500/20 transition-colors duration-500" />
+            <div className="absolute top-6 right-8 text-5xl opacity-80 group-hover:scale-110 transition-transform duration-500 drop-shadow-lg">⏱️</div>
             <div>
-              <h2 className="text-2xl font-bold text-slate-100 mb-3 group-hover:text-cyan-400 transition-colors">⏱️ Exam Mode</h2>
-              <p className="text-slate-400 mb-6 relative z-10">Challenge yourself with custom MCQ or Theory exams. Set a timer and track your scores.</p>
+              <h2 className="text-2xl font-bold tracking-tight text-white mb-3 group-hover:text-cyan-400 transition-colors">Exam Mode</h2>
+              <p className="text-slate-400/90 mb-8 relative z-10 leading-relaxed text-[15px] font-medium">Challenge yourself with dynamic, timed MCQ & Theory exams based on your syllabus. Track your logic against AI.</p>
             </div>
-            <span className="inline-flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
+            <span className="inline-flex items-center text-cyan-400 font-bold group-hover:gap-3 transition-all tracking-wide text-sm uppercase">
               Take an Exam &rarr;
             </span>
           </div>
@@ -65,16 +69,15 @@ export default function Home() {
           {/* Chat Mode Card */}
           <div 
             onClick={() => router.push('/chat')}
-            className="group cursor-pointer bg-slate-900/50 border border-slate-800 hover:border-indigo-500/50 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col justify-between"
+            className="group cursor-pointer bg-white/[0.02] hover:bg-white/[0.04] border border-white/5 hover:border-purple-500/30 backdrop-blur-2xl p-8 rounded-[2rem] shadow-2xl hover:shadow-[0_0_40px_rgba(168,85,247,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 text-left relative overflow-hidden flex flex-col justify-between"
           >
-            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-              <span className="text-8xl">💬</span>
-            </div>
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-purple-500/10 rounded-full blur-3xl group-hover:bg-purple-500/20 transition-colors duration-500" />
+            <div className="absolute top-6 right-8 text-5xl opacity-80 group-hover:scale-110 transition-transform duration-500 drop-shadow-lg">💬</div>
             <div>
-              <h2 className="text-2xl font-bold text-slate-100 mb-3 group-hover:text-indigo-400 transition-colors">💬 Chat with PDF</h2>
-              <p className="text-slate-400 mb-6 relative z-10">Have an intelligent conversation with your documents. Ask questions and get interactive answers.</p>
+              <h2 className="text-2xl font-bold tracking-tight text-white mb-3 group-hover:text-purple-400 transition-colors">Chat with PDF</h2>
+              <p className="text-slate-400/90 mb-8 relative z-10 leading-relaxed text-[15px] font-medium">Unleash exactly Multi-Model Chat logic (Gemini & Llama) against your textbooks. Generate interactive Mermaid flows directly.</p>
             </div>
-            <span className="inline-flex items-center text-indigo-400 font-semibold group-hover:gap-2 transition-all">
+            <span className="inline-flex items-center text-purple-400 font-bold group-hover:gap-3 transition-all tracking-wide text-sm uppercase">
               Start Chatting &rarr;
             </span>
           </div>
@@ -82,16 +85,15 @@ export default function Home() {
           {/* Analytics Card */}
           <div 
             onClick={() => router.push('/dashboard')}
-            className="group cursor-pointer bg-slate-900/50 border border-slate-800 hover:border-purple-500/50 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col justify-between"
+            className="group cursor-pointer bg-white/[0.02] hover:bg-white/[0.04] border border-white/5 hover:border-emerald-500/30 backdrop-blur-2xl p-8 rounded-[2rem] shadow-2xl hover:shadow-[0_0_40px_rgba(16,185,129,0.1)] transition-all duration-500 ease-out hover:-translate-y-2 text-left relative overflow-hidden flex flex-col justify-between"
           >
-            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
-              <span className="text-8xl">📊</span>
-            </div>
+            <div className="absolute -top-10 -right-10 w-40 h-40 bg-emerald-500/10 rounded-full blur-3xl group-hover:bg-emerald-500/20 transition-colors duration-500" />
+            <div className="absolute top-6 right-8 text-5xl opacity-80 group-hover:scale-110 transition-transform duration-500 drop-shadow-lg">📊</div>
             <div>
-              <h2 className="text-2xl font-bold text-slate-100 mb-3 group-hover:text-purple-400 transition-colors">📊 My Analytics</h2>
-              <p className="text-slate-400 mb-6 relative z-10">Track your learning progress, view historical exam scores, and monitor your study habits in one place.</p>
+              <h2 className="text-2xl font-bold tracking-tight text-white mb-3 group-hover:text-emerald-400 transition-colors">My Analytics</h2>
+              <p className="text-slate-400/90 mb-8 relative z-10 leading-relaxed text-[15px] font-medium">Locally cache and graph your learning progress, historical exam scores, and study habits in a secure dashboard.</p>
             </div>
-            <span className="inline-flex items-center text-purple-400 font-semibold group-hover:gap-2 transition-all">
+            <span className="inline-flex items-center text-emerald-400 font-bold group-hover:gap-3 transition-all tracking-wide text-sm uppercase">
               View Dashboard &rarr;
             </span>
           </div>
