@@ -1,81 +1,110 @@
 "use client";
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-export const dynamic = 'force-dynamic';
-
-export default function EduGenHome() {
-  const [file, setFile] = useState(null);
-  const [marks, setMarks] = useState("10");
-  const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleProcess = async () => {
-    if (!file) return alert("Please select a file first!");
-    setLoading(true);
-    setResult(null);
-
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('marks', marks);
-
-    try {
-      const res = await fetch('http://localhost:5000/generate', {
-        method: 'POST',
-        body: formData,
-      });
-      const data = await res.json();
-      
-      // SUCCESS: This fills the empty UI boxes
-      setResult(data); 
-    } catch (err) {
-      alert("Backend connection failed.");
-    } finally {
-      setLoading(false);
-    }
-  };
+export default function Home() {
+  const router = useRouter();
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-6 selection:bg-blue-500/30">
-      <main className="max-w-4xl mx-auto pt-10 pb-20">
-        <header className="text-center mb-12">
-          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent mb-2">EduGen AI</h1>
-          <p className="text-slate-400">Intelligent Study Material Generator</p>
-        </header>
+    <div className="min-h-screen bg-slate-950 text-white flex flex-col items-center justify-center p-6 selection:bg-blue-500/30 relative">
+      <button 
+        onClick={() => router.push('/profile')}
+        className="absolute top-6 right-6 flex items-center gap-3 bg-slate-900/80 border border-slate-700 px-5 py-2.5 rounded-full hover:bg-slate-800 transition-all shadow-lg hover:shadow-blue-900/20 hover:border-blue-500/50"
+      >
+        <span className="w-8 h-8 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center text-sm font-bold">👤</span>
+        <span className="font-semibold text-slate-200 tracking-wide text-sm hidden sm:block">My Account</span>
+      </button>
 
-        <div className="bg-slate-900/50 border border-slate-800 backdrop-blur-xl p-8 rounded-3xl shadow-2xl mb-10">
-          <input type="file" onChange={(e) => setFile(e.target.files[0])} className="w-full mb-6 text-slate-400 file:bg-blue-600 file:text-white file:rounded-full file:border-0 file:px-6 file:py-2 cursor-pointer" />
-          <div className="flex gap-4 mb-6 items-center">
-            <label className="text-slate-300">Difficulty:</label>
-            <select value={marks} onChange={(e) => setMarks(e.target.value)} className="bg-slate-800 border-slate-700 rounded-xl p-3 w-full outline-none focus:ring-2 focus:ring-blue-500">
-              <option value="2">2 Marks (Short)</option>
-              <option value="6">6 Marks (Standard)</option>
-              <option value="10">10 Marks (Detailed)</option>
-            </select>
-          </div>
-          <button onClick={handleProcess} disabled={loading} className="w-full bg-blue-600 py-4 rounded-xl font-bold hover:bg-blue-500 transition-all active:scale-[0.98]">
-            {loading ? "AI is Generating..." : "Generate Study Material"}
-          </button>
-        </div>
-
-        {/* This section fixes the "No data received" issue */}
-        {result && (
-          <div className="animate-in fade-in slide-in-from-bottom-4 bg-slate-900/50 border border-slate-800 p-8 rounded-3xl shadow-2xl">
-            <h2 className="text-xl font-bold text-blue-400 mb-6 flex items-center gap-2">
-              <span className="w-2 h-6 bg-blue-500 rounded-full" /> Result
-            </h2>
-            <div className="space-y-6">
-              <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700/50">
-                <h3 className="text-xs font-semibold text-slate-500 uppercase mb-2 tracking-widest">Question</h3>
-                <p className="text-lg text-slate-200">{result.question || "No data received"}</p>
-              </div>
-              <div className="bg-blue-600/5 p-6 rounded-2xl border border-blue-500/20">
-                <h3 className="text-xs font-semibold text-blue-400 uppercase mb-2 tracking-widest">Answer</h3>
-                <p className="text-slate-300 leading-relaxed whitespace-pre-wrap">{result.answer || "No data received"}</p>
-              </div>
+      <div className="max-w-3xl w-full text-center space-y-8">
+        <header className="space-y-4">
+          <div className="inline-block p-1 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 mb-2">
+            <div className="bg-slate-950 rounded-full px-6 py-2 text-sm font-medium">
+              v2.0 Update Active
             </div>
           </div>
-        )}
-      </main>
+          <h1 className="text-6xl md:text-7xl font-extrabold bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">EduGen AI</h1>
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
+            Your intelligent learning companion. Generate targeted study materials from your documents or test your knowledge in exam mode.
+          </p>
+        </header>
+
+        <div className="grid md:grid-cols-2 gap-6 pt-8 w-full max-w-5xl mx-auto">
+          {/* Study Mode Card */}
+          <div 
+            onClick={() => router.push('/study')}
+            className="group cursor-pointer bg-slate-900/50 border border-slate-800 hover:border-blue-500/50 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col justify-between"
+          >
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+              <span className="text-8xl">📚</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-100 mb-3 group-hover:text-blue-400 transition-colors">📘 Study Material</h2>
+              <p className="text-slate-400 mb-6 relative z-10">Upload your PDFs and instantly generate comprehensive Q&A pairs. Export to Anki or listen via Audio.</p>
+            </div>
+            <span className="inline-flex items-center text-blue-400 font-semibold group-hover:gap-2 transition-all">
+              Start Studying &rarr;
+            </span>
+          </div>
+
+          {/* Exam Mode Card */}
+          <div 
+            onClick={() => router.push('/exam')}
+            className="group cursor-pointer bg-slate-900/50 border border-slate-800 hover:border-cyan-500/50 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col justify-between"
+          >
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+              <span className="text-8xl">⏱️</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-100 mb-3 group-hover:text-cyan-400 transition-colors">⏱️ Exam Mode</h2>
+              <p className="text-slate-400 mb-6 relative z-10">Challenge yourself with custom MCQ or Theory exams. Set a timer and track your scores.</p>
+            </div>
+            <span className="inline-flex items-center text-cyan-400 font-semibold group-hover:gap-2 transition-all">
+              Take an Exam &rarr;
+            </span>
+          </div>
+
+          {/* Chat Mode Card */}
+          <div 
+            onClick={() => router.push('/chat')}
+            className="group cursor-pointer bg-slate-900/50 border border-slate-800 hover:border-indigo-500/50 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col justify-between"
+          >
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+              <span className="text-8xl">💬</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-100 mb-3 group-hover:text-indigo-400 transition-colors">💬 Chat with PDF</h2>
+              <p className="text-slate-400 mb-6 relative z-10">Have an intelligent conversation with your documents. Ask questions and get interactive answers.</p>
+            </div>
+            <span className="inline-flex items-center text-indigo-400 font-semibold group-hover:gap-2 transition-all">
+              Start Chatting &rarr;
+            </span>
+          </div>
+
+          {/* Analytics Card */}
+          <div 
+            onClick={() => router.push('/dashboard')}
+            className="group cursor-pointer bg-slate-900/50 border border-slate-800 hover:border-purple-500/50 backdrop-blur-xl p-8 rounded-3xl shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 text-left relative overflow-hidden flex flex-col justify-between"
+          >
+            <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
+              <span className="text-8xl">📊</span>
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-slate-100 mb-3 group-hover:text-purple-400 transition-colors">📊 My Analytics</h2>
+              <p className="text-slate-400 mb-6 relative z-10">Track your learning progress, view historical exam scores, and monitor your study habits in one place.</p>
+            </div>
+            <span className="inline-flex items-center text-purple-400 font-semibold group-hover:gap-2 transition-all">
+              View Dashboard &rarr;
+            </span>
+          </div>
+        </div>
+
+        {/* Footer / Developer Details */}
+        <footer className="mt-20 border-t border-slate-800/50 pt-8 pb-4 w-full text-center fade-in">
+          <p className="text-slate-400 flex items-center justify-center gap-2 text-sm sm:text-base">
+            Designed & Developed with <span className="text-red-500 animate-pulse">❤️</span> by <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 tracking-wide">Parth</span>
+          </p>
+          <p className="text-xs text-slate-600 mt-3 font-medium tracking-widest uppercase">EduGen AI v3.0 • Final Year Project</p>
+        </footer>
+      </div>
     </div>
   );
 }

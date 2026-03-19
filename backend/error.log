@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "C:\Users\parth\Desktop\EduGen_AI\backend\app.py", line 26, in generate
+    reader = PyPDF2.PdfReader(file)
+  File "C:\Users\parth\AppData\Local\Programs\Python\Python314\Lib\site-packages\PyPDF2\_reader.py", line 319, in __init__
+    self.read(stream)
+    ~~~~~~~~~^^^^^^^^
+  File "C:\Users\parth\AppData\Local\Programs\Python\Python314\Lib\site-packages\PyPDF2\_reader.py", line 1415, in read
+    self._find_eof_marker(stream)
+    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "C:\Users\parth\AppData\Local\Programs\Python\Python314\Lib\site-packages\PyPDF2\_reader.py", line 1471, in _find_eof_marker
+    raise PdfReadError("EOF marker not found")
+PyPDF2.errors.PdfReadError: EOF marker not found
