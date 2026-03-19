@@ -60,5 +60,14 @@ npm run dev
 
 Finally, open your browser to `http://localhost:3000` to access the EduGen workspace.
 
+### 3. 🐳 Docker Deployment (Production)
+If you prefer to run the entire stack via containerization, EduGen AI is fully Docker-ready.
+
+Build and spin up the frontend and backend containers simultaneously using Docker Compose:
+```bash
+docker-compose up --build -d
+```
+The architecture will automatically map the Next.js UI to `localhost:3000` and the Python API to `localhost:5000` in isolated environments.
+
 ---
 *Designed & Developed by Parth*
