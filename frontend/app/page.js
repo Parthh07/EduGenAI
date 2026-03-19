@@ -33,7 +33,32 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-slate-400 max-w-2xl mx-auto leading-relaxed font-light tracking-wide">
             Your incredibly intelligent learning companion. Generate study materials, pass exams, and chat with your documents.
           </p>
-        </header>        <div className="grid md:grid-cols-2 gap-5 pt-8 w-full max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-20 duration-1000 delay-150 ease-out fill-mode-both">
+        </header>
+
+        {/* Powered By Section */}
+        <div className="pt-8 pb-4 animate-in fade-in slide-in-from-bottom-16 duration-1000 delay-300 ease-out fill-mode-both">
+          <p className="text-[10px] font-bold text-slate-500 tracking-[0.3em] uppercase mb-8 text-center">Powered by Premium Technologies</p>
+          <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-50 hover:opacity-100 grayscale hover:grayscale-0 transition-all duration-700">
+            <div className="flex items-center gap-2.5 hover:scale-110 transition-transform duration-300">
+              <img src="https://cdn.simpleicons.org/nvidia/76B900" alt="NVIDIA" className="h-6 drop-shadow-[0_0_15px_rgba(118,185,0,0.5)]" />
+              <span className="font-bold text-slate-300 tracking-tight text-sm">NVIDIA NIM</span>
+            </div>
+            <div className="flex items-center gap-2.5 hover:scale-110 transition-transform duration-300">
+              <img src="https://cdn.simpleicons.org/googlegemini/8E75B2" alt="Google Gemini" className="h-5 drop-shadow-[0_0_15px_rgba(142,117,178,0.5)]" />
+              <span className="font-bold text-slate-300 tracking-tight text-sm">Google Gemini</span>
+            </div>
+            <div className="flex items-center gap-2.5 hover:scale-110 transition-transform duration-300">
+              <img src="https://cdn.simpleicons.org/nextdotjs/white" alt="Next.js" className="h-5 drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]" />
+              <span className="font-bold text-slate-300 tracking-tight text-sm">Next.js 15</span>
+            </div>
+            <div className="flex items-center gap-2.5 hover:scale-110 transition-transform duration-300">
+              <img src="https://cdn.simpleicons.org/tailwindcss/38B2AC" alt="Tailwind CSS" className="h-5 drop-shadow-[0_0_15px_rgba(56,178,172,0.5)]" />
+              <span className="font-bold text-slate-300 tracking-tight text-sm">Tailwind CSS</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-5 pt-12 w-full max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-20 duration-1000 delay-500 ease-out fill-mode-both">
           {/* Study Mode Card */}
           <div 
             onClick={() => router.push('/study')}
