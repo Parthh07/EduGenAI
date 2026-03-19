@@ -102,7 +102,7 @@ export default function Home() {
           <p className="text-slate-400 flex items-center justify-center gap-2 text-sm sm:text-base">
             Designed & Developed with <span className="text-red-500 animate-pulse">❤️</span> by <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 tracking-wide">Parth</span>
           </p>
-          <p className="text-xs text-slate-600 mt-3 font-medium tracking-widest uppercase">EduGen AI v3.0 • Final Year Project</p>
+          <p className="text-xs text-slate-600 mt-3 font-medium tracking-widest uppercase">EduGen AI v3.0</p>
         </footer>
       </div>
     </div>
