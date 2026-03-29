@@ -280,7 +280,15 @@ export default function ChatMode() {
                 <div className="w-16 h-16 bg-[#050505] rounded-full border border-white/10 flex items-center justify-center text-white shadow-lg">
                   <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
                 </div>
-                <p className="text-sm font-medium leading-relaxed">System initialized. Awaiting context payload. Provide PDF documents in the sidebar prior to requesting inference.</p>
+                <p className="text-sm font-medium leading-relaxed">System initialized. Awaiting context payload. Provide PDF documents prior to requesting inference.</p>
+                <div className="md:hidden w-full bg-[#050505] p-4 rounded-2xl border border-white/5 shadow-inner">
+                   <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-3">Upload Mobile Context</p>
+                   <input type="file" multiple onChange={(e) => {
+                     const arr = Array.from(e.target.files);
+                     setFiles(arr);
+                     setGlobalFiles(arr);
+                   }} className="text-xs text-slate-400 file:bg-white/10 file:text-white file:font-bold file:rounded-xl file:border-0 file:px-4 file:py-2.5 cursor-pointer w-full hover:file:bg-white/20 transition-all font-mono" />
+                </div>
               </div>
             )}
             

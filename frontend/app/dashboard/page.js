@@ -71,6 +71,8 @@ export default function DashboardMode() {
           </div>
         </div>
 
+
+
         <h2 className="text-lg font-bold mb-6 text-white uppercase tracking-widest border-b border-white/10 pb-4">Exam History Archive</h2>
         
         {totalExams === 0 ? (
