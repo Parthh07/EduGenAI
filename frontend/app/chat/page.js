@@ -2,6 +2,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGlobalFile } from '../context/FileContext';
+import { useAuth } from '../context/AuthContext';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
@@ -42,17 +43,17 @@ const MermaidBlock = ({ code }) => {
 
   if (isFullscreen) {
     return (
-      <div className="fixed inset-0 z-[100] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-10 animate-in fade-in zoom-in-95 duration-200">
+      <div className="fixed inset-0 z-[100] bg-[#050505]/95 backdrop-blur-md flex flex-col items-center justify-center p-4 md:p-10 animate-in fade-in zoom-in-95 duration-200">
         <div className="w-full max-w-7xl flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">Flowchart Preview</h2>
+          <h2 className="text-2xl font-bold text-white tracking-tight">Data Visualization Profile</h2>
           <div className="flex gap-3">
-            <button onClick={handleDownload} className="bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg hover:shadow-indigo-500/20 text-sm">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Download SVG
+            <button onClick={handleDownload} className="bg-white text-black hover:bg-slate-200 px-5 py-2.5 rounded-xl font-bold flex items-center gap-2 transition-all shadow-lg text-sm">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Download Output
             </button>
-            <button onClick={() => setIsFullscreen(false)} className="bg-slate-800 hover:bg-slate-700 px-5 py-2.5 rounded-xl font-bold text-slate-300 transition-all text-sm">✕ Close</button>
+            <button onClick={() => setIsFullscreen(false)} className="bg-[#0A0A0A] hover:bg-white/5 px-5 py-2.5 rounded-xl font-bold text-slate-300 border border-white/10 transition-all text-sm">✕ Terminate</button>
           </div>
         </div>
-        <div className="flex-1 w-full bg-slate-900 overflow-auto flex justify-center items-center shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-slate-700 rounded-[2rem] p-10" dangerouslySetInnerHTML={{ __html: ref.current ? ref.current.innerHTML : '' }} />
+        <div className="flex-1 w-full bg-[#050505] overflow-auto flex justify-center items-center shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-white/10 rounded-3xl p-10" dangerouslySetInnerHTML={{ __html: ref.current ? ref.current.innerHTML : '' }} />
       </div>
     );
   }
@@ -60,14 +61,14 @@ const MermaidBlock = ({ code }) => {
   return (
     <div className="relative group my-8">
       <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity z-10 duration-200">
-        <button onClick={() => setIsFullscreen(true)} className="bg-slate-800/90 hover:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-md border border-slate-600 shadow-xl text-slate-300 flex items-center gap-2 transition-colors">
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg> Expand
+        <button onClick={() => setIsFullscreen(true)} className="bg-[#0A0A0A]/90 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-md border border-white/10 shadow-xl text-slate-300 flex items-center gap-2 transition-colors">
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"></path></svg> Expand Max
         </button>
-        <button onClick={handleDownload} className="bg-indigo-600/90 hover:bg-indigo-500 px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-md border border-indigo-500 shadow-xl text-white flex items-center gap-2 transition-colors">
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Download
+        <button onClick={handleDownload} className="bg-white hover:bg-slate-200 px-3 py-1.5 rounded-lg text-xs font-semibold backdrop-blur-md border border-white shadow-xl text-black flex items-center gap-2 transition-colors">
+          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg> Save
         </button>
       </div>
-      <div className="mermaid-wrapper flex justify-center bg-slate-950 overflow-x-auto p-8 rounded-[1.5rem] border border-slate-800 shadow-inner w-full min-h-[150px]" ref={ref} />
+      <div className="mermaid-wrapper flex justify-center bg-[#050505] overflow-x-auto p-8 rounded-3xl border border-white/10 shadow-inner w-full min-h-[150px]" ref={ref} />
     </div>
   );
 };
@@ -75,6 +76,7 @@ const MermaidBlock = ({ code }) => {
 export default function ChatMode() {
   const router = useRouter();
   const { globalFiles, setGlobalFiles } = useGlobalFile();
+  const { user, loading: authLoading } = useAuth();
   const [files, setFiles] = useState(globalFiles || []);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -85,6 +87,12 @@ export default function ChatMode() {
   // History State
   const [sessions, setSessions] = useState([]);
   const [activeSessionId, setActiveSessionId] = useState(null);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem('eduGenChats') || '[]');
@@ -137,7 +145,6 @@ export default function ChatMode() {
 
   const handleSend = async (e) => {
     e?.preventDefault();
-    // If exploring old history without active file, block send
     if (!input.trim() || files.length === 0) {
       return alert("Please upload a PDF file below to start or continue chatting.");
     }
@@ -148,15 +155,26 @@ export default function ChatMode() {
     setMessages(newHistory);
     setLoading(true);
 
+    let currentSessionId = activeSessionId;
+    if (!currentSessionId) {
+      currentSessionId = Date.now().toString();
+      setActiveSessionId(currentSessionId);
+    }
+
     const formData = new FormData();
     files.forEach(f => formData.append('files', f));
     formData.append('message', userMsg);
     formData.append('history', JSON.stringify(messages));
     formData.append('modelChoice', modelChoice);
+    formData.append('sessionId', currentSessionId);
 
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
-      const res = await fetch(`${apiUrl}/chat`, { method: 'POST', body: formData });
+      const res = await fetch(`${apiUrl}/chat`, { 
+        method: 'POST', 
+        headers: { 'Authorization': `Bearer ${user?.token}` },
+        body: formData 
+      });
       if (!res.ok) {
         const errData = await res.json();
         throw new Error(errData.error || "Failed to connect to AI");
@@ -172,13 +190,13 @@ export default function ChatMode() {
   };
 
   const markdownComponents = {
-    p: ({node, ...props}) => <p className="mb-5 leading-relaxed text-slate-200 last:mb-0" {...props} />,
-    ul: ({node, ...props}) => <ul className="list-disc pl-6 mb-5 space-y-2 text-slate-200 marker:text-indigo-400" {...props} />,
-    ol: ({node, ...props}) => <ol className="list-decimal pl-6 mb-5 space-y-2 text-slate-200 marker:text-indigo-400" {...props} />,
+    p: ({node, ...props}) => <p className="mb-4 leading-relaxed text-slate-300 last:mb-0 text-[15px]" {...props} />,
+    ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-4 space-y-2 text-slate-300 marker:text-slate-500" {...props} />,
+    ol: ({node, ...props}) => <ol className="list-decimal pl-5 mb-4 space-y-2 text-slate-300 marker:text-slate-500 font-mono text-sm" {...props} />,
     li: ({node, ...props}) => <li className="leading-relaxed" {...props} />,
-    h1: ({node, ...props}) => <h1 className="text-2xl font-bold mt-8 mb-4 text-indigo-300 border-b border-slate-700 pb-2" {...props} />,
-    h2: ({node, ...props}) => <h2 className="text-xl font-bold mt-6 mb-3 text-indigo-200" {...props} />,
-    h3: ({node, ...props}) => <h3 className="text-lg font-bold mt-5 mb-2 text-indigo-200" {...props} />,
+    h1: ({node, ...props}) => <h1 className="text-xl font-bold mt-8 mb-4 text-white border-b border-white/10 pb-2 flex items-center gap-2" {...props}><span className="w-1.5 h-1.5 bg-white rounded-full inline-block"></span>{props.children}</h1>,
+    h2: ({node, ...props}) => <h2 className="text-lg font-bold mt-6 mb-3 text-white tracking-widest uppercase text-xs" {...props} />,
+    h3: ({node, ...props}) => <h3 className="text-base font-bold mt-5 mb-2 text-slate-200" {...props} />,
     strong: ({node, ...props}) => <strong className="font-semibold text-white" {...props} />,
     code: ({node, inline, className, children, ...props}) => {
       const match = /language-(\w+)/.exec(className || '');
@@ -186,95 +204,104 @@ export default function ChatMode() {
         return <MermaidBlock code={String(children).replace(/\n$/, '')} />;
       }
       return inline 
-        ? <code className="bg-slate-950 text-indigo-300 px-1.5 py-0.5 rounded text-sm font-mono border border-slate-800" {...props}>{children}</code>
-        : <pre className="bg-slate-950 border border-slate-800 p-5 rounded-2xl overflow-x-auto mb-5 shadow-inner"><code className="text-sm font-mono text-slate-300" {...props}>{children}</code></pre>;
+        ? <code className="bg-[#050505] text-slate-200 px-1.5 py-0.5 rounded text-sm font-mono border border-white/10" {...props}>{children}</code>
+        : <pre className="bg-[#050505] border border-white/10 p-5 rounded-2xl overflow-x-auto mb-5 shadow-inner"><code className="text-[13px] font-mono text-slate-300" {...props}>{children}</code></pre>;
     },
-    blockquote: ({node, ...props}) => <blockquote className="border-l-4 border-indigo-500 pl-4 py-1 my-5 bg-indigo-900/10 text-slate-300 italic rounded-r-lg" {...props} />
+    blockquote: ({node, ...props}) => <blockquote className="border-l-2 border-white/20 pl-4 py-1 my-5 bg-white/[0.02] text-slate-400 italic rounded-r-lg text-sm" {...props} />
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white p-4 h-screen flex flex-col">
-      <div className="w-full max-w-7xl mx-auto flex justify-between items-center mb-4 flex-none">
+    <div className="min-h-screen bg-[#050505] text-white p-4 h-screen flex flex-col font-sans selection:bg-indigo-500/30">
+      
+      {/* Sleek Minimal Header */}
+      <div className="w-full max-w-[90rem] mx-auto flex justify-between items-center mb-4 flex-none">
         <button 
           onClick={() => router.push('/')}
-          className="text-slate-400 hover:text-white transition flex items-center gap-2 font-medium bg-slate-900 px-4 py-2 rounded-xl"
+          className="text-slate-400 hover:text-white transition flex items-center gap-2 text-sm font-medium tracking-wide h-10 px-4"
         >
-          <span>&larr;</span> Home
+          <span>&larr;</span> Return Home
         </button>
-        <h1 className="text-2xl font-black bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent tracking-tight">
-          Chat with Document
+        <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
+          <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div> Context Chat
         </h1>
-        <button onClick={startNewChat} className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold px-4 py-2 rounded-xl transition-all shadow-lg flex items-center gap-2">
-          <span>+</span> New Chat
+        <button onClick={startNewChat} className="bg-white hover:bg-slate-200 text-black font-bold h-10 px-5 rounded-xl transition-all shadow-md flex items-center gap-2 text-sm">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path></svg> Initialize Chat
         </button>
       </div>
 
-      <main className="w-full max-w-7xl mx-auto flex gap-6 flex-1 min-h-0">
+      <main className="w-full max-w-[90rem] mx-auto flex gap-4 flex-1 min-h-0 pb-2">
         
-        {/* Left Sidebar: History & Active Files */}
-        <div className="hidden md:flex w-1/4 bg-slate-900/40 border border-slate-800 rounded-3xl p-5 flex-col shadow-2xl overflow-hidden ring-1 ring-white/5">
+        {/* Left Sidebar: Minimalist History & Context */}
+        <div className="hidden md:flex w-72 lg:w-80 bg-[#0A0A0A] border border-white/10 rounded-3xl p-5 flex-col shadow-2xl overflow-hidden">
           <div className="flex-none mb-6">
-            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              Active Context
+            <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2 border-b border-white/5 pb-2">
+              Memory Vectors Active
             </h2>
             {files.length > 0 ? (
-              <div className="bg-emerald-500/10 border border-emerald-500/20 p-3 rounded-xl flex justify-between items-center group">
-                <span className="text-emerald-400 text-sm font-medium truncate">📄 {files.length} File(s) loaded</span>
-                <button onClick={() => { setFiles([]); setGlobalFiles([]); }} className="text-emerald-500/50 hover:text-emerald-400 opacity-0 group-hover:opacity-100 transition-opacity">✕</button>
+              <div className="bg-[#050505] border border-white/10 p-3 rounded-xl flex justify-between items-center group shadow-inner">
+                <span className="text-slate-300 text-sm font-medium truncate flex items-center gap-2">
+                   <svg className="w-4 h-4 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                   {files.length} Document(s) loaded
+                </span>
+                <button onClick={() => { setFiles([]); setGlobalFiles([]); }} className="text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity p-1">✕</button>
               </div>
             ) : (
               <input type="file" multiple onChange={(e) => {
                 const arr = Array.from(e.target.files);
                 setFiles(arr);
                 setGlobalFiles(arr);
-              }} className="text-xs text-slate-400 file:bg-indigo-600/20 file:text-indigo-400 file:rounded-xl file:border-0 file:px-4 file:py-2.5 cursor-pointer w-full hover:file:bg-indigo-600/30 transition-all font-medium" />
+              }} className="text-xs text-slate-400 file:bg-white/5 file:text-slate-300 file:font-bold file:rounded-xl file:border-0 file:px-4 file:py-2.5 cursor-pointer w-full hover:file:bg-white/10 transition-all shadow-inner" />
             )}
           </div>
 
-          <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-2">
-            <h2 className="text-xs font-bold text-slate-500 uppercase tracking-widest mb-3 sticky top-0 bg-slate-900/90 py-2 backdrop-blur-md">Recent Chats</h2>
-            {sessions.length === 0 && <p className="text-slate-600 text-sm">No history yet.</p>}
+          <div className="flex-1 overflow-y-auto pr-2 -mr-2 space-y-2 [&::-webkit-scrollbar]:w-1.5 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
+            <h2 className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 sticky top-0 bg-[#0A0A0A]/90 py-2 backdrop-blur-md border-b border-white/5 z-10">Historical Operations</h2>
+            {sessions.length === 0 && <p className="text-slate-600 text-xs font-medium px-2 mt-4">No operational history found.</p>}
             {sessions.map((s, i) => (
               <div 
                 key={s.id} 
                 onClick={() => loadSession(s)}
-                className={`p-3 rounded-xl cursor-pointer transition-all border ${activeSessionId === s.id ? 'bg-indigo-600/20 border-indigo-500/30 text-indigo-100' : 'bg-slate-800/30 border-slate-800 hover:bg-slate-800 hover:border-slate-700 text-slate-400'}`}
+                className={`p-3 rounded-xl cursor-pointer transition-all border ${activeSessionId === s.id ? 'bg-[#050505] border-white/20 text-white shadow-md' : 'bg-transparent border-transparent hover:bg-white/5 hover:border-white/5 text-slate-400'}`}
               >
                 <p className="text-sm font-medium truncate mb-1">{s.title}</p>
-                <p className="text-[10px] opacity-60 font-mono">{new Date(s.date).toLocaleDateString()}</p>
+                <p className="text-[10px] opacity-60 font-mono tracking-widest uppercase">{new Date(s.date).toLocaleDateString()}</p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* Chat Interface */}
-        <div className="flex-1 bg-slate-900/80 border border-slate-800 rounded-3xl flex flex-col overflow-hidden shadow-2xl relative ring-1 ring-white/5">
+        {/* Core Chat Interface */}
+        <div className="flex-1 bg-[#0A0A0A] border border-white/10 rounded-3xl flex flex-col overflow-hidden shadow-2xl relative">
           
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scroll-smooth will-change-scroll">
+          {/* Scroll Area */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 scroll-smooth will-change-scroll [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:bg-white/10 [&::-webkit-scrollbar-thumb]:rounded-full">
             {messages.length === 0 && (
               <div className="h-full flex flex-col items-center justify-center text-slate-500 space-y-6 max-w-md mx-auto text-center">
-                <div className="w-20 h-20 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-3xl flex items-center justify-center text-4xl shadow-inner border border-indigo-500/10">🤖</div>
-                <p className="text-lg leading-relaxed">Hello! Upload a PDF on the left and ask me anything about it. I'll read through it and give you exact answers.</p>
+                <div className="w-16 h-16 bg-[#050505] rounded-full border border-white/10 flex items-center justify-center text-white shadow-lg">
+                  <svg className="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+                </div>
+                <p className="text-sm font-medium leading-relaxed">System initialized. Awaiting context payload. Provide PDF documents in the sidebar prior to requesting inference.</p>
               </div>
             )}
             
             {messages.map((msg, idx) => (
               <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 {msg.role === 'assistant' && (
-                  <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/50 flex items-center justify-center mr-3 mt-1 flex-none text-sm">🤖</div>
+                  <div className="w-8 h-8 rounded-full bg-[#050505] border border-white/10 flex items-center justify-center mr-3 mt-1 flex-none shadow-sm">
+                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                  </div>
                 )}
                 <div className={`max-w-[85%] md:max-w-[75%] p-5 rounded-3xl shadow-md ${
                   msg.role === 'user' 
-                    ? 'bg-indigo-600 text-white rounded-tr-sm bg-gradient-to-br from-indigo-500 to-indigo-600' 
-                    : 'bg-slate-800/80 text-slate-200 border border-slate-700 rounded-tl-sm backdrop-blur-sm'
+                    ? 'bg-white text-black rounded-tr-sm font-medium border border-transparent' 
+                    : 'bg-[#050505] text-slate-200 border border-white/10 rounded-tl-sm'
                 }`}>
                   {msg.role === 'assistant' ? (
                      <div className="markdown-body">
                        <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
                      </div>
                   ) : (
-                    <span className="whitespace-pre-wrap leading-relaxed text-[15px]">{msg.content}</span>
+                    <span className="whitespace-pre-wrap leading-relaxed text-[14px]">{msg.content}</span>
                   )}
                 </div>
               </div>
@@ -282,69 +309,72 @@ export default function ChatMode() {
             
             {loading && (
               <div className="flex justify-start">
-                <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/50 flex items-center justify-center mr-3 mt-1 flex-none text-sm">🤖</div>
-                <div className="bg-slate-800/80 border border-slate-700 p-5 rounded-3xl rounded-tl-sm shadow-md flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 bg-indigo-400 rounded-full animate-bounce"></span>
-                  <span className="w-2.5 h-2.5 bg-indigo-400 rounded-full animate-bounce" style={{animationDelay: '0.15s'}}></span>
-                  <span className="w-2.5 h-2.5 bg-indigo-400 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></span>
+                <div className="w-8 h-8 rounded-full bg-[#050505] border border-white/10 flex items-center justify-center mr-3 mt-1 flex-none shadow-sm">
+                   <svg className="w-4 h-4 text-white animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                </div>
+                <div className="bg-[#050505] border border-white/10 p-5 rounded-3xl rounded-tl-sm shadow-md flex items-center gap-1.5 h-[62px]">
+                  <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce"></span>
+                  <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{animationDelay: '0.15s'}}></span>
+                  <span className="w-1.5 h-1.5 bg-slate-500 rounded-full animate-bounce" style={{animationDelay: '0.3s'}}></span>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="p-4 md:p-6 bg-slate-900 border-t border-slate-800/80">
+          <div className="p-4 md:p-6 bg-[#0A0A0A] border-t border-white/5 relative z-20">
             
-            <div className="mb-4 flex flex-col md:flex-row justify-between items-center gap-4 max-w-4xl mx-auto">
+            <div className="mb-4 flex flex-col md:flex-row justify-between items-center gap-4 w-full">
               {/* Context Indicator */}
-              <div className="text-xs font-semibold text-slate-500 flex items-center gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span> Context Size: {files.length > 0 ? "~100,000+ Tokens Active" : "Empty"}
+              <div className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 border border-white/10 bg-[#050505] px-3 py-1.5 rounded-full shadow-inner">
+                <span className={`w-1.5 h-1.5 rounded-full ${files.length > 0 ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.8)]" : "bg-red-500"}`}></span> 
+                {files.length > 0 ? <span className="text-slate-300">Context Connected</span> : <span className="text-slate-500">No Context</span>}
               </div>
               
               {/* Multi-Model Selector */}
-              <div className="inline-flex bg-slate-950 p-1 rounded-xl border border-slate-800/80 shadow-inner">
+              <div className="inline-flex bg-[#050505] p-1 rounded-xl border border-white/10 shadow-inner">
                 <button 
                   type="button"
                   onClick={(e) => { e.preventDefault(); setModelChoice('GEMINI'); }}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${modelChoice === 'GEMINI' ? 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30' : 'text-slate-500 hover:text-slate-300 border border-transparent'}`}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${modelChoice === 'GEMINI' ? 'bg-white text-black shadow-md' : 'text-slate-500 hover:text-slate-300 border border-transparent'}`}
                 >
-                  <span className="text-sm">⚡</span> Google Gemini 2.5
+                   Google 2.5
                 </button>
                 <button 
                   type="button"
                   onClick={(e) => { e.preventDefault(); setModelChoice('NVIDIA'); }}
-                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all tracking-wide flex items-center gap-2 ${modelChoice === 'NVIDIA' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'text-slate-500 hover:text-slate-300 border border-transparent'}`}
+                  className={`px-4 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-2 ${modelChoice === 'NVIDIA' ? 'bg-white text-black shadow-md' : 'text-slate-500 hover:text-slate-300 border border-transparent'}`}
                 >
-                  <span className="text-sm">🐉</span> NVIDIA Llama 405B
+                   NVDIA 405B
                 </button>
               </div>
             </div>
 
             {/* Quick Actions */}
-            <div className="flex gap-2 mb-3 max-w-4xl mx-auto">
+            <div className="flex gap-2 mb-3">
               <button 
                  onClick={(e) => {
                    e.preventDefault();
                    setInput("Please strictly analyze this document and generate a single, comprehensive flowchart mapping out its core sequential concepts. Output the graph using standard Mermaid.js syntax inside a ```mermaid code block. Do not use any special HTML characters in node names.");
                  }}
-                 className="text-xs font-semibold bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/20 px-4 py-2 rounded-xl transition-all flex items-center gap-2 shadow-sm"
+                 className="text-[11px] font-bold text-slate-300 bg-[#050505] hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-2 uppercase tracking-widest"
               >
-                📊 Generate Concept Flowchart
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"></path></svg> Graph Analytics
               </button>
             </div>
 
-            <form onSubmit={handleSend} className="relative flex items-center max-w-4xl mx-auto">
+            <form onSubmit={handleSend} className="relative flex items-center w-full">
               <input 
                 type="text" 
                 value={input} 
                 onChange={(e) => setInput(e.target.value)} 
                 disabled={loading}
-                placeholder={files.length === 0 ? "Upload a file in the sidebar to chat..." : "Ask a question about the document..."}
-                className="w-full bg-slate-950 border border-slate-700 text-slate-100 placeholder:text-slate-500 rounded-2xl py-4 pl-6 pr-16 outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all shadow-inner disabled:opacity-50 text-[15px]"
+                placeholder={files.length === 0 ? "Awaiting context upload..." : "Enter request parameters..."}
+                className="w-full bg-[#050505] border border-white/10 text-white placeholder:text-slate-500 rounded-2xl py-4.5 pl-6 pr-16 outline-none focus:border-white/30 transition-all shadow-inner disabled:opacity-50 text-[14px] font-medium"
               />
               <button 
                 type="submit" 
                 disabled={!input.trim() || loading}
-                className="absolute right-2 bg-indigo-600 hover:bg-indigo-500 text-white w-11 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-50 disabled:hover:bg-indigo-600 focus:scale-95 shadow-md"
+                className="absolute right-2 bg-white text-black hover:bg-slate-200 w-11 h-11 rounded-xl flex items-center justify-center transition-all disabled:opacity-20 disabled:hover:bg-white focus:scale-95 shadow-md"
               >
                 <svg className="w-5 h-5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
               </button>
