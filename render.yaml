@@ -1,15 +1,20 @@
 services:
   - type: web
     name: edugen-backend
-    env: python
-    buildCommand: "cd backend && pip install -r requirements.txt"
-    startCommand: "cd backend && gunicorn app:app -b 0.0.0.0:$PORT"
+    env: node
+    rootDir: backend-node
+    buildCommand: npm install
+    startCommand: node server.js
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
-      - key: RENDER_DISK_MOUNT_PATH
-        value: /data
-    disk:
-      name: edugen-db-disk
-      mountPath: /data
-      sizeGB: 1
+      - key: NODE_VERSION
+        value: 20.0.0
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET_KEY
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: PORT
+        value: 10000
