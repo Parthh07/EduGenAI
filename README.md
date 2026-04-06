@@ -5,7 +5,7 @@
 ## 🌟 Core Features
 
 - **📚 Multi-Document 1M Token Context**: Upload multiple massive textbooks simultaneously. The backend synthesizes information across all documents with perfect recall.
-- **🚀 Multi-Model LLM Architecture**: Seamlessly route complex queries between **Google Gemini 2.5 Flash** (for blazing speed) and **NVIDIA Meta Llama 3.1 405B** (for heavy analytical reasoning) using a dynamic frontend toggle.
+- **🚀 High-Performance LLM Architecture**: Powered by the **Google Gemini API** for blazing-fast inference and robust OCR processing (including handwritten notes).
 - **⏱️ Interactive Exam Engine**: Auto-generate custom timed MCQ or Theory exams directly from your syllabus. Features real-time grading and logical AI explanations for every correct answer.
 - **📊 Mermaid.js Flowchart Generator**: Instantly turn walls of academic text into interactive, downloadable SVG flowcharts to visualize complex workflows.
 - **🎙️ Text-to-Speech Audio Overviews**: Convert your dense generated study guides into listenable "podcasts" for auditory learning and accessibility.
@@ -15,36 +15,40 @@
 
 **Frontend**
 - Next.js (React App Router)
-- Tailwind CSS v4 (with Typography plugin)
+- Tailwind CSS v4, Framer Motion & Shadcn UI
 - React-Markdown & Remark-GFM
 - Mermaid.js (Client-side Visual Graphing)
-- Canvas Confetti 
+- Canvas Confetti
 
 **Backend**
-- Python 3 & Flask (REST API)
-- PyPDF2 (with highly-strict PDF Validation parsing)
-- Google Generative AI API (Gemini 2.5 Flash)
-- NVIDIA NIM API Serverless Inference (Llama 405B)
+- Node.js & Express (REST API)
+- Neon Serverless Postgres & Sequelize (Database & ORM)
+- pdf-parse (PDF extraction & parsing)
+- Google Generative AI API (Gemini Integration)
+- JWT & bcryptjs (Authentication)
+- Multer (File Upload Handling)
 
 ## 🚀 How to Run Locally
 
-### 1. Backend Setup (Flask AI Server)
-Navigate to the backend directory and install the Python dependencies:
+### 1. Backend Setup (Node.js Express Server)
+Navigate to the backend directory and install the Node.js dependencies:
 ```bash
-cd backend
-pip install -r requirements.txt
+cd backend-node
+npm install
 ```
 
-Create a `.env` file in the `backend` directory with your API keys:
+Create a `.env` file in the `backend-node` directory with your database URI and API keys:
 ```env
 GEMINI_API_KEY=your_google_ai_key_here
-NVIDIA_API_KEY=your_nvidia_nim_key_here
+DATABASE_URL=your_neon_postgres_uri_here
+JWT_SECRET=your_jwt_secret
 ```
 
-Start the Python AI server:
+Start the Node.js API server:
 ```bash
-python app.py
+npm start
 ```
+*(Or use `npm run dev` to start with nodemon)*
 
 ### 2. Frontend Setup (Next.js Application)
 Open a new terminal window, navigate to the frontend directory, and install the Node dependencies:
@@ -63,11 +67,11 @@ Finally, open your browser to `http://localhost:3000` to access the EduGen works
 ### 3. 🐳 Docker Deployment (Production)
 If you prefer to run the entire stack via containerization, EduGen AI is fully Docker-ready.
 
-Build and spin up the frontend and backend containers simultaneously using Docker Compose:
+Build and spin up the frontend and backend containers simultaneously using Docker Compose (if configured):
 ```bash
 docker-compose up --build -d
 ```
-The architecture will automatically map the Next.js UI to `localhost:3000` and the Python API to `localhost:5000` in isolated environments.
+The architecture will map the Next.js UI to `localhost:3000` and the Node.js API to `localhost:5000` (or configured port) in isolated environments.
 
 ---
 *Designed & Developed by Parth*
