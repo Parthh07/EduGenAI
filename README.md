@@ -4,29 +4,28 @@
 
 ## 🌟 Core Features
 
-- **📚 Multi-Document 1M Token Context**: Upload multiple massive textbooks simultaneously. The backend synthesizes information across all documents with perfect recall.
-- **🚀 High-Performance LLM Architecture**: Powered by the **Google Gemini API** for blazing-fast inference and robust OCR processing (including handwritten notes).
-- **⏱️ Interactive Exam Engine**: Auto-generate custom timed MCQ or Theory exams directly from your syllabus. Features real-time grading and logical AI explanations for every correct answer.
+- **📚 Multi-Document 1M Token Context**: Upload multiple massive textbooks. Utilizing the **Gemini File API**, documents are processed via "upload-once" caching for blazing-fast inference and reduced network payloads.
+- **🚀 High-Performance LLM Architecture**: Powered by the **Google Gemini API** (`@google/genai`) for instant synthesis and robust OCR processing (including handwritten notes).
+- **⏱️ Interactive Exam Engine**: Auto-generate custom sized MCQ or Theory exams with varying difficulty directly from your syllabus. Features real-time AI grading for theory answers and logical explanations for multiple choice.
+- **🧠 Spaced Repetition (SRS) Flashcards**: Auto-generate flashcards from your documents, securely stored in the database with an intelligent spacing algorithm.
 - **📊 Mermaid.js Flowchart Generator**: Instantly turn walls of academic text into interactive, downloadable SVG flowcharts to visualize complex workflows.
-- **🎙️ Text-to-Speech Audio Overviews**: Convert your dense generated study guides into listenable "podcasts" for auditory learning and accessibility.
-- **📈 Local Analytics Dashboard**: A privacy-first, secure dashboard that magically persists your chat sessions and historical exam scores directly in your browser.
+- **📈 Cloud-Synced Dashboard**: A secure analytics dashboard that securely persists all your chat sessions, flashcards, and historical exam summaries in a PostgreSQL database for full cross-device accessibility.
 
 ## 🛠️ Technology Stack
 
 **Frontend**
-- Next.js (React App Router)
+- Next.js 16 & React 19 (App Router)
 - Tailwind CSS v4, Framer Motion & Shadcn UI
+- Lucide React & Base UI
 - React-Markdown & Remark-GFM
 - Mermaid.js (Client-side Visual Graphing)
-- Canvas Confetti
 
 **Backend**
 - Node.js & Express (REST API)
 - Neon Serverless Postgres & Sequelize (Database & ORM)
-- pdf-parse (PDF extraction & parsing)
-- Google Generative AI API (Gemini Integration)
+- Google Gemini API (via `@google/genai` & Gemini File API)
 - JWT & bcryptjs (Authentication)
-- Multer (File Upload Handling)
+- Multer (File Upload Memory Handling)
 
 ## 🚀 How to Run Locally
 

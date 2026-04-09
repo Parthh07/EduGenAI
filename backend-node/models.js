@@ -20,7 +20,9 @@ const Exam = sequelize.define('Exam', {
   id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
   user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: User, key: 'id' } },
   score: { type: DataTypes.INTEGER, allowNull: false },
-  total_questions: { type: DataTypes.INTEGER, allowNull: false }
+  total_questions: { type: DataTypes.INTEGER, allowNull: false },
+  exam_type: { type: DataTypes.STRING(20), defaultValue: 'MCQ' },
+  difficulty: { type: DataTypes.STRING(20), defaultValue: 'medium' }
 }, { tableName: 'exams', timestamps: true });
 
 const ChatSession = sequelize.define('ChatSession', {
@@ -30,10 +32,25 @@ const ChatSession = sequelize.define('ChatSession', {
   history_json: { type: DataTypes.TEXT, allowNull: false }
 }, { tableName: 'chat_sessions', timestamps: true });
 
+const Flashcard = sequelize.define('Flashcard', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: User, key: 'id' } },
+  question: { type: DataTypes.TEXT, allowNull: false },
+  answer: { type: DataTypes.TEXT, allowNull: false },
+  source: { type: DataTypes.STRING(500), defaultValue: '' },
+  ease_factor: { type: DataTypes.FLOAT, defaultValue: 2.5 },
+  interval: { type: DataTypes.INTEGER, defaultValue: 0 },
+  next_review: { type: DataTypes.DATE, defaultValue: DataTypes.NOW },
+  review_count: { type: DataTypes.INTEGER, defaultValue: 0 }
+}, { tableName: 'flashcards', timestamps: true });
+
 User.hasMany(Exam, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 Exam.belongsTo(User, { foreignKey: 'user_id' });
 
 User.hasMany(ChatSession, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 ChatSession.belongsTo(User, { foreignKey: 'user_id' });
 
-module.exports = { sequelize, User, Exam, ChatSession };
+User.hasMany(Flashcard, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+Flashcard.belongsTo(User, { foreignKey: 'user_id' });
+
+module.exports = { sequelize, User, Exam, ChatSession, Flashcard };

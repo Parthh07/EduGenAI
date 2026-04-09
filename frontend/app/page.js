@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from './context/AuthContext';
-import { BookOpen, MessagesSquare, BarChart3, Timer, Menu, X, ArrowRight, ChevronDown, Sparkles } from "lucide-react";
+import { BookOpen, MessagesSquare, BarChart3, Timer, Menu, X, ArrowRight, ChevronDown, Sparkles, Layers } from "lucide-react";
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
@@ -171,74 +171,76 @@ export default function Home() {
               <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-medium">Four powerful AI modules designed to accelerate your learning.</p>
             </div>
 
-            {/* Tight 2x2 Grid optimized for single viewport height on desktop */}
-            <div className="grid md:grid-cols-2 gap-4 md:gap-6 w-full">
+            {/* Tight grid optimized for single viewport */}
+            <div className="grid md:grid-cols-3 gap-4 md:gap-5 w-full">
                
-               {/* Feature 1 */}
-               <div 
-                onClick={() => router.push('/study')}
-                className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-indigo-500/30 hover:bg-indigo-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg"
-              >
-                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-5">
-                  <BookOpen className="w-6 h-6 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Study Synthesis</h3>
-                <p className="text-slate-400 mb-6 flex-1 text-sm md:text-base leading-relaxed font-medium">Upload massive document textbooks and let the AI generate perfect flashcards and Q&A sets automatically.</p>
-                <div className="flex items-center text-indigo-400 group-hover:text-indigo-300 text-sm font-bold transition-colors uppercase tracking-wider">
-                  Open Synthesis <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
+               {/* Feature 1 — Study */}
+               <div onClick={() => router.push('/study')} className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-indigo-500/30 hover:bg-indigo-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg">
+                 <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-5">
+                   <BookOpen className="w-6 h-6 text-indigo-400 group-hover:text-indigo-300 transition-colors" />
+                 </div>
+                 <h3 className="text-xl font-bold text-white mb-3">Study Synthesis</h3>
+                 <p className="text-slate-400 mb-6 flex-1 text-sm leading-relaxed font-medium">Upload textbooks — generate Q&A, flashcards, and study material at any difficulty level.</p>
+                 <div className="flex items-center text-indigo-400 group-hover:text-indigo-300 text-sm font-bold transition-colors uppercase tracking-wider">
+                   Open Synthesis <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                 </div>
+               </div>
 
-              {/* Feature 2 */}
-              <div 
-                onClick={() => router.push('/exam')}
-                className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-cyan-500/30 hover:bg-cyan-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg"
-              >
-                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-5">
-                  <Timer className="w-6 h-6 text-cyan-400 group-hover:text-cyan-300 transition-colors" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Exam Simulation</h3>
-                <p className="text-slate-400 mb-6 flex-1 text-sm md:text-base leading-relaxed font-medium">Test your knowledge with strictly timed, AI-generated multiple choice and theoretical exams.</p>
-                <div className="flex items-center text-cyan-400 group-hover:text-cyan-300 text-sm font-bold transition-colors uppercase tracking-wider">
-                  Start Exam <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
+               {/* Feature 2 — Exam */}
+               <div onClick={() => router.push('/exam')} className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-cyan-500/30 hover:bg-cyan-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg">
+                 <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-5">
+                   <Timer className="w-6 h-6 text-cyan-400 group-hover:text-cyan-300 transition-colors" />
+                 </div>
+                 <h3 className="text-xl font-bold text-white mb-3">Exam Simulator</h3>
+                 <p className="text-slate-400 mb-6 flex-1 text-sm leading-relaxed font-medium">Timed MCQ and theory exams with AI grading — Easy, Medium, or Hard difficulty.</p>
+                 <div className="flex items-center text-cyan-400 group-hover:text-cyan-300 text-sm font-bold transition-colors uppercase tracking-wider">
+                   Start Exam <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                 </div>
+               </div>
 
-              {/* Feature 3 */}
-              <div 
-                onClick={() => router.push('/chat')}
-                className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-purple-500/30 hover:bg-purple-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg"
-              >
-                <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-5">
-                  <MessagesSquare className="w-6 h-6 text-purple-400 group-hover:text-purple-300 transition-colors" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Contextual AI Chat</h3>
-                <p className="text-slate-400 mb-6 flex-1 text-sm md:text-base leading-relaxed font-medium">Discuss study material dynamically with the AI. Includes full robust Mermaid architecture diagram rendering.</p>
-                <div className="flex items-center text-purple-400 group-hover:text-purple-300 text-sm font-bold transition-colors uppercase tracking-wider">
-                  Open Chat <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
+               {/* Feature 3 — Chat */}
+               <div onClick={() => router.push('/chat')} className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-purple-500/30 hover:bg-purple-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg">
+                 <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mb-5">
+                   <MessagesSquare className="w-6 h-6 text-purple-400 group-hover:text-purple-300 transition-colors" />
+                 </div>
+                 <h3 className="text-xl font-bold text-white mb-3">Contextual AI Chat</h3>
+                 <p className="text-slate-400 mb-6 flex-1 text-sm leading-relaxed font-medium">Chat with AI about your documents. Sessions saved to the cloud. Mermaid flowcharts supported.</p>
+                 <div className="flex items-center text-purple-400 group-hover:text-purple-300 text-sm font-bold transition-colors uppercase tracking-wider">
+                   Open Chat <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                 </div>
+               </div>
 
-              {/* Feature 4 */}
-              <div 
-                onClick={() => router.push('/dashboard')}
-                className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg"
-              >
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-5">
-                  <BarChart3 className="w-6 h-6 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">Progress Analytics</h3>
-                <p className="text-slate-400 mb-6 flex-1 text-sm md:text-base leading-relaxed font-medium">Track all your past chat sessions and exam attempts securely within your personal encrypted dashboard.</p>
-                <div className="flex items-center text-emerald-400 group-hover:text-emerald-300 text-sm font-bold transition-colors uppercase tracking-wider">
-                  View Dashboard <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
+               {/* Feature 4 — Flashcards */}
+               <div onClick={() => router.push('/flashcards')} className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-emerald-500/30 hover:bg-emerald-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg">
+                 <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-5">
+                   <Layers className="w-6 h-6 text-emerald-400 group-hover:text-emerald-300 transition-colors" />
+                 </div>
+                 <h3 className="text-xl font-bold text-white mb-3">Flashcard Review</h3>
+                 <p className="text-slate-400 mb-6 flex-1 text-sm leading-relaxed font-medium">Spaced repetition system (SRS) built on your saved Q&A cards. Again, Good, Easy — review at the right time.</p>
+                 <div className="flex items-center text-emerald-400 group-hover:text-emerald-300 text-sm font-bold transition-colors uppercase tracking-wider">
+                   Review Cards <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                 </div>
+               </div>
+
+               {/* Feature 5 — Dashboard */}
+               <div onClick={() => router.push('/dashboard')} className="group cursor-pointer bg-[#0A0A0A] border border-white/5 hover:border-amber-500/30 hover:bg-amber-500/[0.02] p-6 md:p-8 rounded-[1.5rem] transition-all flex flex-col h-full shadow-lg md:col-span-2">
+                 <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center mb-5">
+                   <BarChart3 className="w-6 h-6 text-amber-400 group-hover:text-amber-300 transition-colors" />
+                 </div>
+                 <h3 className="text-xl font-bold text-white mb-3">Progress Analytics</h3>
+                 <p className="text-slate-400 mb-6 flex-1 text-sm leading-relaxed font-medium">Score trends, study streaks, best scores, and full exam history — synced across all your devices.</p>
+                 <div className="flex items-center text-amber-400 group-hover:text-amber-300 text-sm font-bold transition-colors uppercase tracking-wider">
+                   View Dashboard <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                 </div>
+               </div>
 
             </div>
+
 
             <footer className="w-full flex justify-center opacity-60 mt-12 md:mt-16 pb-4">
               <p className="text-xs md:text-sm font-medium text-slate-400 tracking-wide">© 2026 EduGen AI. Designed for knowledge.</p>
             </footer>
+
 
           </div>
         </section>

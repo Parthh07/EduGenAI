@@ -10,12 +10,11 @@ export const AuthProvider = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    // Check JWT on extremely fast initial load
     const storedToken = localStorage.getItem('edugen_jwt');
     const storedUsername = localStorage.getItem('edugen_username');
-    
+    const storedEmail = localStorage.getItem('edugen_email');
     if (storedToken && storedUsername) {
-      setUser({ token: storedToken, username: storedUsername });
+      setUser({ token: storedToken, username: storedUsername, email: storedEmail || '' });
     }
     setLoading(false);
   }, []);
@@ -23,12 +22,14 @@ export const AuthProvider = ({ children }) => {
   const login = (data) => {
     localStorage.setItem('edugen_jwt', data.access_token);
     localStorage.setItem('edugen_username', data.username);
-    setUser({ token: data.access_token, username: data.username });
+    localStorage.setItem('edugen_email', data.email || '');
+    setUser({ token: data.access_token, username: data.username, email: data.email || '' });
   };
 
   const logout = () => {
     localStorage.removeItem('edugen_jwt');
     localStorage.removeItem('edugen_username');
+    localStorage.removeItem('edugen_email');
     setUser(null);
     router.push('/');
   };
