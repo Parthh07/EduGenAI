@@ -4,11 +4,13 @@ const cors = require('cors');
 const multer = require('multer');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
 const { GoogleGenAI } = require('@google/genai');
-const { sequelize, User, Exam, ChatSession, Flashcard } = require('./models');
+const { sequelize, User, Exam, ChatSession, Flashcard, PasswordReset } = require('./models');
 
 const app = express();
 const upload = multer({
@@ -44,7 +46,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 async function geminiGenerate(parts) {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.0-flash',
+    model: 'gemini-2.5-flash',
     contents: [{ role: 'user', parts }]
   });
   return response.text;
@@ -210,7 +212,7 @@ app.post('/generate', requireAuth, upload.array('files'), async (req, res) => {
 
     const response = await geminiGenerate([
       ...fileParts,
-      { text: `You are analyzing the above document(s), which may include handwritten notes, scanned pages, or typed text. Use OCR if needed. ${scopeInstruction} ${diffText} Generate a ${marks}-mark question, a detailed answer, and the source location (e.g. "Pages 2, 12, 23"). Return STRICTLY a valid JSON object with keys: "question" (string), "answer" (string), "sources" (string). No markdown wrapping.` }
+      { text: `You are analyzing the above document(s), which may include handwritten notes, scanned pages, or typed text. Use OCR if needed. ${scopeInstruction} ${diffText} Generate a ${marks}-mark question, a detailed answer, an explanation of the core concept, and the source location (e.g. "Pages 2, 12, 23"). Return STRICTLY a valid JSON object with keys: "question" (string), "answer" (string), "explanation" (string), "sources" (string). No markdown wrapping.` }
     ]);
 
     res.json(JSON.parse(cleanJson(response)));
@@ -481,6 +483,192 @@ app.delete('/api/flashcards/:id', requireAuth, async (req, res) => {
   try {
     await Flashcard.destroy({ where: { id: req.params.id, user_id: req.user.id } });
     res.json({ message: 'Card deleted' });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// ── FLASHCARD AUTO-GENERATE ────────────────────────────────────────────────────
+app.post('/api/flashcards/generate', requireAuth, upload.array('files'), async (req, res) => {
+  try {
+    const count = parseInt(req.body.count) || 10;
+    let fileParts = [];
+    if (req.files && req.files.length > 0) fileParts = buildFileParts(req.files);
+    if (req.body.fileContextUris) {
+      const uris = JSON.parse(req.body.fileContextUris);
+      uris.forEach(u => fileParts.push({ fileData: { fileUri: u.uri, mimeType: u.mimeType } }));
+    }
+    if (fileParts.length === 0) return res.status(400).json({ error: 'No files provided.' });
+
+    const prompt = `You are an expert educator. Analyze the uploaded document(s) carefully — use OCR on any handwritten or scanned content.
+Generate exactly ${count} high-quality flashcards covering the most important concepts, definitions, and facts from the document.
+Return ONLY a valid JSON array — no wrapper object, no markdown — where each element has:
+- "question": string (clear, concise question)
+- "answer": string (comprehensive but concise answer)
+- "source": string (brief location hint, e.g. "Section 3.2" or "Page 12")
+Make questions varied: include definitions, explain-concepts, compare-contrast, and application types.
+No markdown wrapping. Return raw JSON array only.`;
+
+    const responseText = await geminiGenerate([...fileParts, { text: prompt }]);
+    const parsed = JSON.parse(cleanJson(responseText));
+    const cards = Array.isArray(parsed) ? parsed : (parsed.flashcards || []);
+
+    if (!cards.length) return res.status(500).json({ error: 'AI returned no flashcards. Try a different document.' });
+
+    // Bulk insert into DB
+    const created = await Promise.all(
+      cards.map(card =>
+        Flashcard.create({
+          user_id: req.user.id,
+          question: String(card.question || '').substring(0, 1000),
+          answer: String(card.answer || '').substring(0, 3000),
+          source: String(card.source || '').substring(0, 500),
+          ease_factor: 2.5,
+          interval: 0,
+          next_review: new Date(),
+          review_count: 0
+        })
+      )
+    );
+
+    res.json({ created: created.length, message: `${created.length} flashcards generated and saved!` });
+  } catch (e) {
+    res.status(500).json({ error: classifyError(e) });
+  }
+});
+
+// ── DOCUMENT SUMMARY ───────────────────────────────────────────────────────────
+app.post('/api/summarize', requireAuth, upload.array('files'), async (req, res) => {
+  try {
+    let fileParts = [];
+    if (req.files && req.files.length > 0) fileParts = buildFileParts(req.files);
+    if (req.body.fileContextUris) {
+      const uris = JSON.parse(req.body.fileContextUris);
+      uris.forEach(u => fileParts.push({ fileData: { fileUri: u.uri, mimeType: u.mimeType } }));
+    }
+    if (fileParts.length === 0) return res.status(400).json({ error: 'No files provided.' });
+
+    const prompt = `You are an expert academic summarizer. Analyze the uploaded document(s) thoroughly — use OCR on handwritten or scanned content.
+
+Generate a comprehensive, well-structured summary using the following format (use markdown):
+
+## 📋 Document Overview
+Brief 2-3 sentence synopsis of what this document covers.
+
+## 🎯 Key Topics
+List the main topics covered as bullet points.
+
+## 📖 Core Concepts & Definitions
+For each major concept, provide:
+**Concept Name**: Clear definition and explanation.
+
+## 🔑 Important Facts & Formulas
+Bullet points of critical facts, formulas, theorems, or rules the student must remember.
+
+## 💡 Key Takeaways
+3-5 main insights a student should walk away with.
+
+## 📝 Likely Exam Topics
+Based on the content, list 5-8 topics most likely to appear in an exam.
+
+Be thorough but concise. Use markdown formatting for readability.`;
+
+    const summary = await geminiGenerate([...fileParts, { text: prompt }]);
+    res.json({ summary });
+  } catch (e) {
+    res.status(500).json({ error: classifyError(e) });
+  }
+});
+
+// ── FORGOT PASSWORD ────────────────────────────────────────────────────────────
+function createMailTransporter() {
+  return nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_APP_PASSWORD
+    }
+  });
+}
+
+app.post('/auth/forgot-password', async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: 'Email is required' });
+
+    const user = await User.findOne({ where: { email } });
+    // Always return success to prevent email enumeration
+    if (!user) return res.json({ message: 'If this email exists, an OTP has been sent.' });
+
+    // Generate 6-digit OTP
+    const otp = crypto.randomInt(100000, 999999).toString();
+    const otp_hash = await bcrypt.hash(otp, 10);
+    const expires_at = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    // Invalidate any previous OTPs for this user
+    await PasswordReset.update({ used: true }, { where: { user_id: user.id, used: false } });
+
+    // Save new OTP
+    await PasswordReset.create({ user_id: user.id, otp_hash, expires_at });
+
+    // Send email
+    const transporter = createMailTransporter();
+    await transporter.sendMail({
+      from: `"EduGen AI" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: '🔐 Your EduGen AI Password Reset OTP',
+      html: `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 480px; margin: 0 auto; background: #050505; color: #ffffff; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255,255,255,0.1);">
+          <div style="background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); padding: 32px; text-align: center;">
+            <h1 style="margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">EduGen AI</h1>
+            <p style="margin: 8px 0 0; opacity: 0.8; font-size: 14px;">Password Reset Request</p>
+          </div>
+          <div style="padding: 40px; text-align: center;">
+            <p style="color: #94a3b8; margin-bottom: 24px; font-size: 15px;">Use the OTP below to reset your password. It expires in <strong style="color: #fff;">15 minutes</strong>.</p>
+            <div style="background: #0a0a0a; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 24px; margin: 24px 0;">
+              <p style="margin: 0 0 8px; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: #6366f1;">One-Time Password</p>
+              <p style="margin: 0; font-size: 48px; font-weight: 900; letter-spacing: 12px; color: #fff; font-family: monospace;">${otp}</p>
+            </div>
+            <p style="color: #64748b; font-size: 13px; margin-top: 24px;">If you did not request this, please ignore this email. Your account remains secure.</p>
+          </div>
+        </div>
+      `
+    });
+
+    res.json({ message: 'If this email exists, an OTP has been sent.' });
+  } catch (e) {
+    console.error('Forgot password error:', e.message);
+    res.status(500).json({ error: 'Failed to send OTP. Please check server email configuration.' });
+  }
+});
+
+app.post('/auth/reset-password', async (req, res) => {
+  try {
+    const { email, otp, newPassword } = req.body;
+    if (!email || !otp || !newPassword) return res.status(400).json({ error: 'Email, OTP, and new password are required.' });
+    if (newPassword.length < 8) return res.status(400).json({ error: 'Password must be at least 8 characters.' });
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(400).json({ error: 'Invalid request.' });
+
+    // Find the latest valid OTP
+    const reset = await PasswordReset.findOne({
+      where: { user_id: user.id, used: false },
+      order: [['createdAt', 'DESC']]
+    });
+
+    if (!reset) return res.status(400).json({ error: 'No active OTP found. Please request a new one.' });
+    if (new Date() > reset.expires_at) return res.status(400).json({ error: 'OTP has expired. Please request a new one.' });
+
+    const otpValid = await bcrypt.compare(otp.trim(), reset.otp_hash);
+    if (!otpValid) return res.status(400).json({ error: 'Invalid OTP. Please check and try again.' });
+
+    // Update password and mark OTP as used
+    const password_hash = await bcrypt.hash(newPassword, 10);
+    await User.update({ password_hash }, { where: { id: user.id } });
+    await reset.update({ used: true });
+
+    res.json({ message: 'Password reset successfully! You can now log in.' });
   } catch (e) {
     res.status(500).json({ error: e.message });
   }

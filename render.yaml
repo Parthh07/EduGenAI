@@ -14,7 +14,9 @@ services:
         sync: false
       - key: GEMINI_API_KEY
         sync: false
-      - key: NVIDIA_API_KEY
-        sync: false
       - key: PORT
         value: 10000
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_APP_PASSWORD
+        sync: false

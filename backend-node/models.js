@@ -44,6 +44,14 @@ const Flashcard = sequelize.define('Flashcard', {
   review_count: { type: DataTypes.INTEGER, defaultValue: 0 }
 }, { tableName: 'flashcards', timestamps: true });
 
+const PasswordReset = sequelize.define('PasswordReset', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  user_id: { type: DataTypes.INTEGER, allowNull: false, references: { model: User, key: 'id' } },
+  otp_hash: { type: DataTypes.STRING(255), allowNull: false },
+  expires_at: { type: DataTypes.DATE, allowNull: false },
+  used: { type: DataTypes.BOOLEAN, defaultValue: false }
+}, { tableName: 'password_resets', timestamps: true });
+
 User.hasMany(Exam, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 Exam.belongsTo(User, { foreignKey: 'user_id' });
 
@@ -53,4 +61,7 @@ ChatSession.belongsTo(User, { foreignKey: 'user_id' });
 User.hasMany(Flashcard, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 Flashcard.belongsTo(User, { foreignKey: 'user_id' });
 
-module.exports = { sequelize, User, Exam, ChatSession, Flashcard };
+User.hasMany(PasswordReset, { foreignKey: 'user_id', onDelete: 'CASCADE' });
+PasswordReset.belongsTo(User, { foreignKey: 'user_id' });
+
+module.exports = { sequelize, User, Exam, ChatSession, Flashcard, PasswordReset };

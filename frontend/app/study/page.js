@@ -23,6 +23,13 @@ export default function StudyMode() {
   const [toast, setToast] = useState(null);
   const [savingCard, setSavingCard] = useState(false);
 
+  // Document Summary feature
+  const [summary, setSummary] = useState(null);
+  const [summaryLoading, setSummaryLoading] = useState(false);
+  const [showSummaryPanel, setShowSummaryPanel] = useState(false);
+  const [summaryCopied, setSummaryCopied] = useState(false);
+  const [activeTab, setActiveTab] = useState('study'); // 'study' | 'summary'
+
   useEffect(() => {
     if (!authLoading && !user) router.push('/login');
   }, [user, authLoading, router]);
@@ -91,16 +98,48 @@ export default function StudyMode() {
     }
   };
 
+  const handleSummarize = async () => {
+    if (!files || files.length === 0) return showToast('Please select at least one file first!', 'error');
+    setSummaryLoading(true);
+    setSummary(null);
+    try {
+      const upData = new FormData();
+      files.forEach(f => upData.append('files', f));
+      const upRes = await fetch(`${apiUrl}/api/files/upload`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${user?.token}` },
+        body: upData
+      });
+      if (!upRes.ok) { const d = await upRes.json(); throw new Error(d.error || 'Upload failed.'); }
+      const { uris } = await upRes.json();
+
+      const body = new FormData();
+      body.append('fileContextUris', JSON.stringify(uris));
+      const res = await fetch(`${apiUrl}/api/summarize`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${user?.token}` },
+        body
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Summarization failed.');
+      setSummary(data.summary);
+    } catch (e) {
+      showToast(e.message || 'Summarization failed.', 'error');
+    } finally {
+      setSummaryLoading(false);
+    }
+  };
+
   const handleCopy = () => {
     if (!result) return;
-    navigator.clipboard.writeText(`Question:\n${result.question}\n\nAnswer:\n${result.answer}`);
+    navigator.clipboard.writeText(`Question:\n${result.question}\n\nAnswer:\n${result.answer}${result.explanation ? `\n\nExplanation:\n${result.explanation}` : ''}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleDownload = () => {
     if (!result) return;
-    const blob = new Blob([`Question:\n${result.question}\n\nAnswer:\n${result.answer}`], { type: 'text/plain' });
+    const blob = new Blob([`Question:\n${result.question}\n\nAnswer:\n${result.answer}${result.explanation ? `\n\nExplanation:\n${result.explanation}` : ''}`], { type: 'text/plain' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'EduGen_Study_Material.txt';
@@ -110,7 +149,7 @@ export default function StudyMode() {
   const handleReadAloud = () => {
     if (!result) return;
     window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(`Question: ${result.question}. Answer: ${result.answer}`);
+    const utterance = new SpeechSynthesisUtterance(`Question: ${result.question}. Answer: ${result.answer}. ${result.explanation ? `Explanation: ${result.explanation}` : ''}`);
     utterance.rate = 0.95;
     window.speechSynthesis.speak(utterance);
     showToast('Reading aloud…');
@@ -174,6 +213,23 @@ export default function StudyMode() {
           <p className="text-slate-400 text-sm md:text-base font-medium">Upload textbooks to automatically generate structured Q&A and save flashcards.</p>
         </header>
 
+        {/* Mode Tab Switcher */}
+        <div className="no-print flex rounded-2xl bg-[#0A0A0A] border border-white/10 p-1 mb-8">
+          {[{key:'study', label:'📚 Study Q&A'}, {key:'summary', label:'📋 AI Summary'}].map(tab => (
+            <button
+              key={tab.key}
+              onClick={() => setActiveTab(tab.key)}
+              className={`flex-1 py-2.5 px-4 rounded-xl text-sm font-bold transition-all ${
+                activeTab === tab.key
+                  ? 'bg-white text-black shadow-sm'
+                  : 'text-slate-500 hover:text-white'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
         <div className="no-print bg-[#0A0A0A] border border-white/10 p-8 rounded-3xl shadow-2xl mb-10">
           
           {/* File Dropzone */}
@@ -215,32 +271,45 @@ export default function StudyMode() {
             )}
           </div>
 
-          {/* Controls Row */}
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div>
-              <label className="block text-slate-400 text-xs font-semibold mb-2 uppercase tracking-widest">Detail Level</label>
-              <select value={marks} onChange={(e) => setMarks(e.target.value)} className="bg-[#050505] border border-white/10 rounded-xl p-4 w-full text-slate-300 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
-                <option value="2">Core Summary (2 Marks)</option>
-                <option value="6">Standard (6 Marks)</option>
-                <option value="10">Deep Conceptual (10 Marks)</option>
-              </select>
-            </div>
-            <div>
-              <label className="block text-slate-400 text-xs font-semibold mb-2 uppercase tracking-widest">Difficulty</label>
-              <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className="bg-[#050505] border border-white/10 rounded-xl p-4 w-full text-slate-300 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
-                <option value="easy">Easy — Beginner</option>
-                <option value="medium">Medium — Intermediate</option>
-                <option value="hard">Hard — Advanced</option>
-              </select>
-            </div>
-          </div>
-          
-          <button onClick={handleProcess} disabled={loading} className="w-full bg-white text-black hover:bg-slate-200 py-3.5 rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2">
-            {loading ? <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : "Synthesize Focus Material"}
-          </button>
+          {/* Controls Row — only for Study Q&A tab */}
+          {activeTab === 'study' && (
+            <>
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div>
+                  <label className="block text-slate-400 text-xs font-semibold mb-2 uppercase tracking-widest">Detail Level</label>
+                  <select value={marks} onChange={(e) => setMarks(e.target.value)} className="bg-[#050505] border border-white/10 rounded-xl p-4 w-full text-slate-300 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                    <option value="2">Core Summary (2 Marks)</option>
+                    <option value="6">Standard (6 Marks)</option>
+                    <option value="10">Deep Conceptual (10 Marks)</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-slate-400 text-xs font-semibold mb-2 uppercase tracking-widest">Difficulty</label>
+                  <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className="bg-[#050505] border border-white/10 rounded-xl p-4 w-full text-slate-300 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                    <option value="easy">Easy — Beginner</option>
+                    <option value="medium">Medium — Intermediate</option>
+                    <option value="hard">Hard — Advanced</option>
+                  </select>
+                </div>
+              </div>
+              <button onClick={handleProcess} disabled={loading} className="w-full bg-white text-black hover:bg-slate-200 py-3.5 rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                {loading ? <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : "Synthesize Focus Material"}
+              </button>
+            </>
+          )}
+
+          {/* Summary Tab Button */}
+          {activeTab === 'summary' && (
+            <button onClick={handleSummarize} disabled={summaryLoading} className="w-full bg-white text-black hover:bg-slate-200 py-3.5 rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+              {summaryLoading
+                ? <><span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" /> Generating AI Summary…</>
+                : '📋 Generate Document Summary'
+              }
+            </button>
+          )}
         </div>
 
-        {result && (
+        {result && activeTab === 'study' && (
           <div className="animate-in fade-in slide-in-from-bottom-8 bg-[#0A0A0A] border border-white/10 p-8 md:p-10 rounded-3xl shadow-2xl">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
@@ -276,6 +345,17 @@ export default function StudyMode() {
                 </div>
               </div>
 
+              {result.explanation && (
+                <div className="bg-[#050505] p-6 md:p-8 rounded-2xl border border-white/5 relative overflow-hidden">
+                  <h3 className="text-xs font-bold text-emerald-400 uppercase mb-3 tracking-widest">Explanation</h3>
+                  <div className="markdown-body">
+                    <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                      {result.explanation}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              )}
+
               {result.sources && (
                 <div className="bg-indigo-500/5 p-5 rounded-xl border border-indigo-500/10 flex items-start gap-4">
                   <svg className="w-5 h-5 text-indigo-400 flex-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -285,6 +365,37 @@ export default function StudyMode() {
                   </div>
                 </div>
               )}
+            </div>
+          </div>
+        )}
+
+        {/* Summary Result */}
+        {summary && activeTab === 'summary' && (
+          <div className="animate-in fade-in slide-in-from-bottom-8 bg-[#0A0A0A] border border-white/10 p-8 md:p-10 rounded-3xl shadow-2xl">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                <span className="w-2 h-6 bg-amber-500 rounded-full" />
+                AI Document Summary
+              </h2>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => { navigator.clipboard.writeText(summary); setSummaryCopied(true); setTimeout(() => setSummaryCopied(false), 2000); }}
+                  className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10"
+                >
+                  {summaryCopied ? '✓ Copied' : 'Copy'}
+                </button>
+                <button
+                  onClick={() => { const blob = new Blob([summary], {type:'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'EduGen_Summary.txt'; a.click(); }}
+                  className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10"
+                >
+                  ⬇ Download
+                </button>
+              </div>
+            </div>
+            <div className="bg-[#050505] p-6 md:p-8 rounded-2xl border border-white/5 markdown-body">
+              <ReactMarkdown components={markdownComponents} remarkPlugins={[remarkGfm]}>
+                {summary}
+              </ReactMarkdown>
             </div>
           </div>
         )}

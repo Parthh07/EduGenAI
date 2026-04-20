@@ -18,6 +18,12 @@ export default function FlashcardsPage() {
   const [sessionStats, setSessionStats] = useState({ again: 0, good: 0, easy: 0 });
   const [toast, setToast] = useState(null);
 
+  // AI Generate from Document
+  const [genFiles, setGenFiles] = useState([]);
+  const [genCount, setGenCount] = useState(10);
+  const [generating, setGenerating] = useState(false);
+  const [showGenPanel, setShowGenPanel] = useState(false);
+
   useEffect(() => {
     if (!authLoading && !user) router.push('/login');
   }, [user, authLoading, router]);
@@ -95,6 +101,47 @@ export default function FlashcardsPage() {
       showToast('Card deleted.');
     } catch {
       showToast('Delete failed.', 'error');
+    }
+  };
+
+  const handleGenerateFlashcards = async () => {
+    if (genFiles.length === 0) return showToast('Please select a PDF or image first.', 'error');
+    setGenerating(true);
+    try {
+      // Step 1: upload via File API
+      const upData = new FormData();
+      genFiles.forEach(f => upData.append('files', f));
+      const upRes = await fetch(`${apiUrl}/api/files/upload`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${user.token}` },
+        body: upData
+      });
+      if (!upRes.ok) {
+        const d = await upRes.json();
+        throw new Error(d.error || 'Failed to upload document.');
+      }
+      const { uris } = await upRes.json();
+
+      // Step 2: generate flashcards
+      const body = new FormData();
+      body.append('count', genCount);
+      body.append('fileContextUris', JSON.stringify(uris));
+      const res = await fetch(`${apiUrl}/api/flashcards/generate`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${user.token}` },
+        body
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Generation failed.');
+
+      showToast(`✨ ${data.created} flashcards generated!`);
+      setGenFiles([]);
+      setShowGenPanel(false);
+      await loadCards();
+    } catch (e) {
+      showToast(e.message || 'Generation failed.', 'error');
+    } finally {
+      setGenerating(false);
     }
   };
 
@@ -233,6 +280,75 @@ export default function FlashcardsPage() {
               <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">Flashcard Review</h1>
               <p className="text-slate-400 text-sm font-medium">Spaced repetition system — review cards at the right time to maximize retention.</p>
             </header>
+
+            {/* ─── AI Generate Panel ─── */}
+            <div className="mb-8">
+              <button
+                onClick={() => setShowGenPanel(v => !v)}
+                className="w-full flex items-center justify-between bg-[#0A0A0A] border border-emerald-500/20 hover:border-emerald-500/50 rounded-2xl px-6 py-4 transition-all group"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-base">✨</span>
+                  <div className="text-left">
+                    <p className="text-sm font-bold text-white">AI Generate from Document</p>
+                    <p className="text-xs text-slate-500">Upload a PDF and let AI create flashcards automatically</p>
+                  </div>
+                </div>
+                <span className={`text-slate-500 transition-transform duration-200 ${showGenPanel ? 'rotate-180' : ''}`}>▼</span>
+              </button>
+
+              {showGenPanel && (
+                <div className="mt-2 bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 animate-in fade-in slide-in-from-top-2">
+                  {/* File picker */}
+                  <div className="relative rounded-xl border border-dashed border-white/20 hover:border-emerald-500/50 bg-[#050505] transition-all p-6 text-center cursor-pointer mb-4">
+                    <input
+                      type="file"
+                      accept=".pdf,image/jpeg,image/png,image/webp"
+                      multiple
+                      onChange={e => setGenFiles(Array.from(e.target.files))}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    />
+                    {genFiles.length === 0 ? (
+                      <>
+                        <p className="text-sm font-bold text-slate-400">📄 Drop PDF or image here</p>
+                        <p className="text-xs text-slate-600 mt-1">PDF, JPG, PNG, WEBP supported</p>
+                      </>
+                    ) : (
+                      <div className="flex flex-col gap-1">
+                        {genFiles.map((f, i) => (
+                          <p key={i} className="text-xs font-bold text-emerald-400">✓ {f.name}</p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Card count */}
+                  <div className="flex items-center gap-4 mb-4">
+                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Cards to generate</label>
+                    <select
+                      value={genCount}
+                      onChange={e => setGenCount(Number(e.target.value))}
+                      className="flex-1 bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-slate-300 text-sm outline-none focus:border-emerald-500 transition-all"
+                    >
+                      {[5, 10, 15, 20].map(n => (
+                        <option key={n} value={n}>{n} flashcards</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={handleGenerateFlashcards}
+                    disabled={generating || genFiles.length === 0}
+                    className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
+                  >
+                    {generating
+                      ? <><span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Generating {genCount} flashcards…</>
+                      : `✨ Generate ${genCount} Flashcards`
+                    }
+                  </button>
+                </div>
+              )}
+            </div>
 
             {/* Stats row */}
             <div className="grid grid-cols-3 gap-4 mb-8">
