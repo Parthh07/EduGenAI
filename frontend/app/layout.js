@@ -2,6 +2,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from './context/AuthContext';
 import { FileProvider } from './context/FileContext';
+import NavBar from './components/NavBar';
+import NavWrapper from './components/NavWrapper';
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -25,7 +28,10 @@ export default function RootLayout({ children }) {
       >
         <AuthProvider>
           <FileProvider>
-            {children}
+            <NavBar />
+            <NavWrapper>
+              {children}
+            </NavWrapper>
           </FileProvider>
         </AuthProvider>
       </body>

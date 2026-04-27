@@ -286,9 +286,6 @@ export default function ChatMode() {
           <button onClick={() => setSidebarOpen(true)} className="md:hidden text-slate-400 hover:text-white transition p-2">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
           </button>
-          <button onClick={() => router.push('/')} className="text-slate-400 hover:text-white transition flex items-center gap-2 text-sm font-medium h-10 px-4">
-            <span>&larr;</span> Home
-          </button>
         </div>
         <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-3">
           <div className="w-2 h-2 bg-indigo-500 rounded-full animate-pulse" /> Context Chat
@@ -399,8 +396,10 @@ export default function ChatMode() {
                 {files.length > 0 ? <span className="text-slate-300">{files.length} doc(s) loaded</span> : <span className="text-slate-500">No document</span>}
               </div>
               <button onClick={(e) => { e.preventDefault(); setInput("Please strictly analyze this document and generate a single, comprehensive flowchart mapping out its core sequential concepts. Output the graph using standard Mermaid.js syntax inside a ```mermaid code block. Do not use any special HTML characters in node names."); }}
-                className="text-[11px] font-bold text-slate-300 bg-[#050505] hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-2 uppercase tracking-widest">
-                ⟳ Generate Flowchart
+                className="text-[11px] font-bold text-slate-300 bg-[#050505] hover:bg-white/10 border border-white/10 px-4 py-2 rounded-xl transition-all shadow-sm flex items-center gap-2 uppercase tracking-widest"
+                title="Auto-fill a prompt to generate a Mermaid.js flowchart from your document">
+                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM9 14a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 10v3m10-3v1m-5 0v2" /></svg>
+                Generate Flowchart
               </button>
             </div>
 

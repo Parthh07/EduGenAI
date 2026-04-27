@@ -200,9 +200,7 @@ export default function StudyMode() {
 
       <div className="fixed top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/10 via-[#050505] to-[#050505] pointer-events-none" />
 
-      <button onClick={() => router.push('/')} className="no-print absolute top-6 left-6 text-slate-400 hover:text-white transition flex items-center gap-2 text-sm font-medium z-50">
-        <span>&larr;</span> Return Home
-      </button>
+
 
       <main className="max-w-4xl mx-auto pt-16 pb-20 relative z-10">
         <header className="no-print text-center mb-12">
@@ -316,17 +314,37 @@ export default function StudyMode() {
                 <span className="w-2 h-6 bg-indigo-500 rounded-full" />
                 Synthesis Result
               </h2>
-              <div className="no-print flex gap-2 flex-wrap">
-                <button onClick={handleSaveFlashcard} disabled={savingCard} className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs px-4 py-2 rounded-lg transition-all border border-indigo-500/50 disabled:opacity-60 flex items-center gap-1.5">
-                  {savingCard ? <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : '💾'} Save Flashcard
-                </button>
-                <button onClick={() => router.push('/flashcards')} className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10">🗂 Review Cards</button>
-                <button onClick={() => router.push('/exam')} className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10">📝 Take Exam</button>
-                <button onClick={handleReadAloud} className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10">🔊 Read</button>
-                <button onClick={handleCopy} className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10">{copied ? "✓ Copied" : "Copy"}</button>
-                <button onClick={handleDownload} className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10">⬇ TXT</button>
-                <button onClick={handleExportCSV} className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10">📊 CSV</button>
-                <button onClick={() => window.print()} className="bg-[#050505] hover:bg-white/5 text-slate-300 font-medium text-xs px-4 py-2 rounded-lg transition-all border border-white/10">Print</button>
+              <div className="no-print flex flex-col gap-3 w-full md:w-auto">
+                {/* Primary Action */}
+                <div className="flex gap-2">
+                  <button onClick={handleSaveFlashcard} disabled={savingCard} className="bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm px-5 py-2.5 rounded-xl transition-all border border-indigo-500/50 disabled:opacity-60 flex items-center gap-2 shadow-md shadow-indigo-900/30">
+                    {savingCard ? <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" /></svg>} Save as Flashcard
+                  </button>
+                  <button onClick={handleReadAloud} title="Read aloud" className="bg-[#050505] hover:bg-white/5 text-slate-300 font-bold text-sm px-4 py-2.5 rounded-xl transition-all border border-white/10 flex items-center gap-2">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" /></svg>
+                    Read Aloud
+                  </button>
+                </div>
+                {/* Export Actions */}
+                <div className="flex gap-2 flex-wrap">
+                  <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest self-center mr-1">Export:</span>
+                  <button onClick={handleCopy} title="Copy to clipboard" className="bg-[#050505] hover:bg-white/5 text-slate-400 hover:text-white font-medium text-xs px-3.5 py-2 rounded-lg transition-all border border-white/10 flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                    {copied ? "Copied!" : "Copy"}
+                  </button>
+                  <button onClick={handleDownload} title="Download as text file" className="bg-[#050505] hover:bg-white/5 text-slate-400 hover:text-white font-medium text-xs px-3.5 py-2 rounded-lg transition-all border border-white/10 flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    Text File
+                  </button>
+                  <button onClick={handleExportCSV} title="Export as CSV for Anki/Quizlet" className="bg-[#050505] hover:bg-white/5 text-slate-400 hover:text-white font-medium text-xs px-3.5 py-2 rounded-lg transition-all border border-white/10 flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+                    CSV
+                  </button>
+                  <button onClick={() => window.print()} title="Print this page" className="bg-[#050505] hover:bg-white/5 text-slate-400 hover:text-white font-medium text-xs px-3.5 py-2 rounded-lg transition-all border border-white/10 flex items-center gap-1.5">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" /></svg>
+                    Print
+                  </button>
+                </div>
               </div>
             </div>
 

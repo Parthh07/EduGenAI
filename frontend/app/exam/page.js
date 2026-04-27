@@ -161,11 +161,8 @@ export default function ExamMode() {
     <div className="min-h-screen bg-[#050505] text-white p-6 selection:bg-cyan-500/30 relative font-sans">
       <div className="fixed top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/10 via-[#050505] to-[#050505] pointer-events-none z-0" />
 
-      {!isExamActive && (
-        <button onClick={() => router.push('/')} className="no-print absolute top-6 left-6 text-slate-400 hover:text-white transition flex items-center gap-2 text-sm font-medium z-50">
-          <span>&larr;</span> Return Home
-        </button>
-      )}
+
+
 
       <main className="max-w-4xl mx-auto pt-16 pb-20 relative z-10">
         
