@@ -21,7 +21,10 @@ export default function DashboardMode() {
       const res = await fetch(`${apiUrl}/api/me/exams`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
-      if (res.ok) setHistory(Array.isArray(await res.json()) ? await res.json() : []);
+      if (res.ok) {
+        const data = await res.json();
+        setHistory(Array.isArray(data) ? data : []);
+      }
     } catch (err) {
       console.error("Dashboard fetch failed", err);
     } finally {

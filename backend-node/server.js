@@ -46,7 +46,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
 async function geminiGenerate(parts) {
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-flash-latest',
     contents: [{ role: 'user', parts }]
   });
   return response.text;
@@ -435,6 +435,7 @@ app.get('/api/flashcards', requireAuth, async (req, res) => {
 
 app.post('/api/flashcards', requireAuth, async (req, res) => {
   try {
+    if (!req.user || !req.user.id) throw new Error('Your session is invalid. Please log out and log back in.');
     const { question, answer, source } = req.body;
     if (!question || !answer) return res.status(400).json({ error: 'Question and answer are required' });
     const card = await Flashcard.create({
@@ -514,6 +515,7 @@ No markdown wrapping. Return raw JSON array only.`;
     const cards = Array.isArray(parsed) ? parsed : (parsed.flashcards || []);
 
     if (!cards.length) return res.status(500).json({ error: 'AI returned no flashcards. Try a different document.' });
+    if (!req.user || !req.user.id) throw new Error('Your session has expired or is invalid. Please log out and log back in.');
 
     // Bulk insert into DB
     const created = await Promise.all(
