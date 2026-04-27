@@ -16,7 +16,6 @@ export default function StudyMode() {
 
   const [files, setFiles] = useState(globalFiles || []);
   const [marks, setMarks] = useState("10");
-  const [difficulty, setDifficulty] = useState("medium");
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -79,7 +78,7 @@ export default function StudyMode() {
       const activeUris = upJson.uris;
 
       // 2. Generate
-      const reqBody = { marks, difficulty, fileContextUris: JSON.stringify(activeUris) };
+      const reqBody = { marks, fileContextUris: JSON.stringify(activeUris) };
       const res = await fetch(`${apiUrl}/generate`, {
         method: 'POST',
         headers: { 
@@ -272,23 +271,13 @@ export default function StudyMode() {
           {/* Controls Row — only for Study Q&A tab */}
           {activeTab === 'study' && (
             <>
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                <div>
-                  <label className="block text-slate-400 text-xs font-semibold mb-2 uppercase tracking-widest">Detail Level</label>
-                  <select value={marks} onChange={(e) => setMarks(e.target.value)} className="bg-[#050505] border border-white/10 rounded-xl p-4 w-full text-slate-300 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
-                    <option value="2">Core Summary (2 Marks)</option>
-                    <option value="6">Standard (6 Marks)</option>
-                    <option value="10">Deep Conceptual (10 Marks)</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-slate-400 text-xs font-semibold mb-2 uppercase tracking-widest">Difficulty</label>
-                  <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} className="bg-[#050505] border border-white/10 rounded-xl p-4 w-full text-slate-300 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
-                    <option value="easy">Easy — Beginner</option>
-                    <option value="medium">Medium — Intermediate</option>
-                    <option value="hard">Hard — Advanced</option>
-                  </select>
-                </div>
+              <div className="mb-8">
+                <label className="block text-slate-400 text-xs font-semibold mb-2 uppercase tracking-widest">Detail Level</label>
+                <select value={marks} onChange={(e) => setMarks(e.target.value)} className="bg-[#050505] border border-white/10 rounded-xl p-4 w-full text-slate-300 text-sm outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+                  <option value="2">Core Summary (2 Marks)</option>
+                  <option value="6">Standard (6 Marks)</option>
+                  <option value="10">Deep Conceptual (10 Marks)</option>
+                </select>
               </div>
               <button onClick={handleProcess} disabled={loading} className="w-full bg-white text-black hover:bg-slate-200 py-3.5 rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center gap-2">
                 {loading ? <span className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : "Synthesize Focus Material"}
