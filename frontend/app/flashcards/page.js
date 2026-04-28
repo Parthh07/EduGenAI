@@ -149,9 +149,9 @@ export default function FlashcardsPage() {
   const progress = reviewQueue.length > 0 ? ((reviewIdx) / reviewQueue.length) * 100 : 0;
 
   const ratingColors = {
-    again: 'bg-red-500/20 border-red-500/40 text-red-300 hover:bg-red-500/30',
-    good: 'bg-indigo-500/20 border-indigo-500/40 text-indigo-300 hover:bg-indigo-500/30',
-    easy: 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/30',
+    again: 'bg-red-50 border-red-200 text-red-600 hover:bg-red-100',
+    good: 'bg-indigo-50 border-indigo-200 text-indigo-600 hover:bg-indigo-100',
+    easy: 'bg-emerald-50 border-emerald-200 text-emerald-600 hover:bg-emerald-100',
   };
 
   const formatNextReview = (dateStr) => {
@@ -162,16 +162,16 @@ export default function FlashcardsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-6 selection:bg-emerald-500/30 relative font-sans">
+    <div className="min-h-screen bg-[#FAFBFE] text-slate-900 p-6 selection:bg-emerald-500/20 relative font-sans">
       
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-6 right-6 z-[200] px-5 py-3 rounded-2xl font-bold text-sm shadow-2xl border animate-in fade-in slide-in-from-top-4 ${toast.type === 'error' ? 'bg-red-500/10 border-red-500/30 text-red-300' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'}`}>
+        <div className={`fixed top-6 right-6 z-[200] px-5 py-3 rounded-2xl font-bold text-sm shadow-lg border animate-in fade-in slide-in-from-top-4 ${toast.type === 'error' ? 'bg-red-50 border-red-200 text-red-600' : 'bg-emerald-50 border-emerald-200 text-emerald-700'}`}>
           {toast.msg}
         </div>
       )}
 
-      <div className="fixed top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-900/10 via-[#050505] to-[#050505] pointer-events-none z-0" />
+      <div className="fixed top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-100/60 via-[#FAFBFE] to-[#FAFBFE] pointer-events-none z-0" />
 
 
 
@@ -191,17 +191,17 @@ export default function FlashcardsPage() {
                   <span className="text-emerald-400">✓ {sessionStats.easy}</span>
                 </div>
               </div>
-              <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+              <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500 rounded-full transition-all duration-500" style={{ width: `${progress}%` }} />
               </div>
             </div>
 
             {/* Card */}
-            <div className="bg-[#0A0A0A] border border-white/10 rounded-[2rem] shadow-2xl overflow-hidden mb-8 min-h-[320px] flex flex-col" onClick={() => !showAnswer && setShowAnswer(true)}>
+            <div className="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden mb-8 min-h-[320px] flex flex-col" onClick={() => !showAnswer && setShowAnswer(true)}>
               {/* Question side */}
               <div className="p-8 md:p-10 flex-1 flex flex-col justify-center">
-                <p className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-4">Question</p>
-                <p className="text-xl md:text-2xl font-semibold text-white leading-relaxed">{currentCard.question}</p>
+                <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-widest mb-4">Question</p>
+                <p className="text-xl md:text-2xl font-semibold text-slate-900 leading-relaxed">{currentCard.question}</p>
                 {currentCard.source && (
                   <p className="mt-4 text-[11px] text-slate-500 font-medium">Source: {currentCard.source}</p>
                 )}
@@ -209,13 +209,13 @@ export default function FlashcardsPage() {
 
               {/* Answer reveal */}
               {showAnswer ? (
-                <div className="border-t border-white/10 bg-[#050505] p-8 md:p-10">
-                  <p className="text-[10px] font-bold text-indigo-400 uppercase tracking-widest mb-4">Answer</p>
-                  <p className="text-base text-slate-200 leading-relaxed whitespace-pre-wrap">{currentCard.answer}</p>
+                <div className="border-t border-slate-200 bg-slate-50 p-8 md:p-10">
+                  <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mb-4">Answer</p>
+                  <p className="text-base text-slate-700 leading-relaxed whitespace-pre-wrap">{currentCard.answer}</p>
                 </div>
               ) : (
-                <div className="border-t border-white/10 bg-white/[0.02] p-6 text-center cursor-pointer hover:bg-white/[0.05] transition-colors">
-                  <p className="text-slate-500 text-sm font-medium">Click to reveal answer</p>
+                <div className="border-t border-slate-200 bg-slate-50/50 p-6 text-center cursor-pointer hover:bg-slate-100 transition-colors">
+                  <p className="text-slate-400 text-sm font-medium">Click to reveal answer</p>
                 </div>
               )}
             </div>
@@ -241,7 +241,7 @@ export default function FlashcardsPage() {
               </div>
             )}
 
-            <button onClick={() => setReviewMode(false)} className="mt-8 w-full text-center text-slate-500 hover:text-white text-sm transition font-medium">
+            <button onClick={() => setReviewMode(false)} className="mt-8 w-full text-center text-slate-400 hover:text-slate-700 text-sm transition font-medium">
               ✕ End Session
             </button>
           </div>
@@ -249,45 +249,45 @@ export default function FlashcardsPage() {
           /* Session Complete */
           <div className="animate-in fade-in zoom-in-95 text-center">
             <div className="text-6xl mb-6">🎉</div>
-            <h2 className="text-3xl font-bold text-white mb-4">Session Complete!</h2>
-            <p className="text-slate-400 text-sm mb-8">You reviewed {reviewQueue.length} card{reviewQueue.length !== 1 ? 's' : ''}.</p>
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Session Complete!</h2>
+            <p className="text-slate-500 text-sm mb-8">You reviewed {reviewQueue.length} card{reviewQueue.length !== 1 ? 's' : ''}.</p>
             <div className="grid grid-cols-3 gap-4 max-w-sm mx-auto mb-10">
-              <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-4 text-center">
-                <p className="text-2xl font-black text-red-400">{sessionStats.again}</p>
-                <p className="text-[10px] font-bold text-red-400/70 uppercase mt-1">Again</p>
+              <div className="bg-red-50 border border-red-200 rounded-2xl p-4 text-center">
+                <p className="text-2xl font-black text-red-600">{sessionStats.again}</p>
+                <p className="text-[10px] font-bold text-red-500 uppercase mt-1">Again</p>
               </div>
-              <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-2xl p-4 text-center">
-                <p className="text-2xl font-black text-indigo-400">{sessionStats.good}</p>
-                <p className="text-[10px] font-bold text-indigo-400/70 uppercase mt-1">Good</p>
+              <div className="bg-indigo-50 border border-indigo-200 rounded-2xl p-4 text-center">
+                <p className="text-2xl font-black text-indigo-600">{sessionStats.good}</p>
+                <p className="text-[10px] font-bold text-indigo-500 uppercase mt-1">Good</p>
               </div>
-              <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-4 text-center">
-                <p className="text-2xl font-black text-emerald-400">{sessionStats.easy}</p>
-                <p className="text-[10px] font-bold text-emerald-400/70 uppercase mt-1">Easy</p>
+              <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center">
+                <p className="text-2xl font-black text-emerald-600">{sessionStats.easy}</p>
+                <p className="text-[10px] font-bold text-emerald-500 uppercase mt-1">Easy</p>
               </div>
             </div>
-            <button onClick={() => { setReviewMode(false); }} className="bg-white text-black font-bold px-8 py-3.5 rounded-xl hover:bg-slate-200 transition">Back to Cards</button>
+            <button onClick={() => { setReviewMode(false); }} className="bg-emerald-600 text-white font-bold px-8 py-3.5 rounded-xl hover:bg-emerald-700 transition shadow-md shadow-emerald-500/20">Back to Cards</button>
           </div>
         ) : (
           /* Main Cards View */
           <>
             <header className="text-center mb-12">
-              <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-                <span className="text-emerald-400 text-xl">🗂</span>
+              <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center mx-auto mb-6">
+                <span className="text-emerald-600 text-xl">🗂</span>
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">Flashcard Review</h1>
-              <p className="text-slate-400 text-sm font-medium">Spaced repetition system — review cards at the right time to maximize retention.</p>
+              <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-3">Flashcard Review</h1>
+              <p className="text-slate-500 text-sm font-medium">Spaced repetition system — review cards at the right time to maximize retention.</p>
             </header>
 
             {/* ─── AI Generate Panel ─── */}
             <div className="mb-8">
               <button
                 onClick={() => setShowGenPanel(v => !v)}
-                className="w-full flex items-center justify-between bg-[#0A0A0A] border border-emerald-500/20 hover:border-emerald-500/50 rounded-2xl px-6 py-4 transition-all group"
+                className="w-full flex items-center justify-between bg-white border border-emerald-200 hover:border-emerald-400 rounded-2xl px-6 py-4 transition-all group shadow-sm"
               >
                 <div className="flex items-center gap-3">
-                  <span className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center text-base">✨</span>
+                  <span className="w-8 h-8 rounded-lg bg-emerald-50 flex items-center justify-center text-base">✨</span>
                   <div className="text-left">
-                    <p className="text-sm font-bold text-white">AI Generate from Document</p>
+                    <p className="text-sm font-bold text-slate-900">AI Generate from Document</p>
                     <p className="text-xs text-slate-500">Upload a PDF and let AI create flashcards automatically</p>
                   </div>
                 </div>
@@ -295,9 +295,8 @@ export default function FlashcardsPage() {
               </button>
 
               {showGenPanel && (
-                <div className="mt-2 bg-[#0A0A0A] border border-white/10 rounded-2xl p-6 animate-in fade-in slide-in-from-top-2">
-                  {/* File picker */}
-                  <div className="relative rounded-xl border border-dashed border-white/20 hover:border-emerald-500/50 bg-[#050505] transition-all p-6 text-center cursor-pointer mb-4">
+                <div className="mt-2 bg-white border border-slate-200 rounded-2xl p-6 animate-in fade-in slide-in-from-top-2 shadow-sm">
+                  <div className="relative rounded-xl border border-dashed border-slate-300 hover:border-emerald-400 bg-slate-50 transition-all p-6 text-center cursor-pointer mb-4">
                     <input
                       type="file"
                       accept=".pdf,image/jpeg,image/png,image/webp"
@@ -321,11 +320,11 @@ export default function FlashcardsPage() {
 
                   {/* Card count */}
                   <div className="flex items-center gap-4 mb-4">
-                    <label className="text-xs font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Cards to generate</label>
+                    <label className="text-xs font-bold text-slate-500 uppercase tracking-widest whitespace-nowrap">Cards to generate</label>
                     <select
                       value={genCount}
                       onChange={e => setGenCount(Number(e.target.value))}
-                      className="flex-1 bg-[#050505] border border-white/10 rounded-xl px-4 py-2.5 text-slate-300 text-sm outline-none focus:border-emerald-500 transition-all"
+                      className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-slate-700 text-sm outline-none focus:border-emerald-500 transition-all"
                     >
                       {[5, 10, 15, 20].map(n => (
                         <option key={n} value={n}>{n} flashcards</option>
@@ -354,30 +353,30 @@ export default function FlashcardsPage() {
                 { label: 'Due Now', value: dueCards.length, color: dueCards.length > 0 ? 'amber' : 'emerald' },
                 { label: 'Mastered', value: masteredCards.length, color: 'emerald' },
               ].map(({ label, value, color }) => (
-                <div key={label} className="bg-[#0A0A0A] border border-white/10 p-5 rounded-2xl text-center">
-                  <p className={`text-${color}-400 text-[10px] font-bold uppercase tracking-widest mb-2`}>{label}</p>
-                  <p className="text-3xl font-black text-white">{loading ? '—' : value}</p>
+                <div key={label} className="bg-white border border-slate-200 p-5 rounded-2xl text-center shadow-sm">
+                  <p className={`text-${color}-600 text-[10px] font-bold uppercase tracking-widest mb-2`}>{label}</p>
+                  <p className="text-3xl font-black text-slate-900">{loading ? '—' : value}</p>
                 </div>
               ))}
             </div>
 
             {/* Start Review */}
             <button onClick={startReview} disabled={dueCards.length === 0 || loading}
-              className="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-4 rounded-2xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 text-base shadow-lg shadow-emerald-900/30 mb-10">
+              className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-4 rounded-2xl transition-all disabled:opacity-50 flex items-center justify-center gap-3 text-base shadow-lg shadow-emerald-500/20 mb-10">
               {dueCards.length > 0 ? `▶ Start Review — ${dueCards.length} Card${dueCards.length !== 1 ? 's' : ''} Due` : '✓ All caught up! No cards due'}
             </button>
 
             {/* All Cards */}
             {!loading && cards.length === 0 ? (
-              <div className="bg-[#0A0A0A] border border-white/10 p-12 rounded-3xl text-center shadow-xl">
-                <p className="text-slate-500 text-sm font-medium mb-4">No flashcards yet.</p>
-                <button onClick={() => router.push('/study')} className="text-indigo-400 hover:text-indigo-300 text-sm font-bold underline">
+              <div className="bg-white border border-slate-200 p-12 rounded-3xl text-center shadow-sm">
+                <p className="text-slate-400 text-sm font-medium mb-4">No flashcards yet.</p>
+                <button onClick={() => router.push('/study')} className="text-indigo-600 hover:text-indigo-700 text-sm font-bold underline">
                   Go to Study Synthesis to generate and save cards →
                 </button>
               </div>
             ) : (
               <>
-                <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4 border-b border-white/10 pb-3">All Cards ({cards.length})</h2>
+                <h2 className="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4 border-b border-slate-200 pb-3">All Cards ({cards.length})</h2>
                 <div className="space-y-3">
                   {loading && (
                     <div className="text-center py-10">
@@ -387,19 +386,19 @@ export default function FlashcardsPage() {
                   {cards.map((card) => {
                     const isDue = new Date(card.next_review) <= new Date();
                     return (
-                      <div key={card.id} className={`bg-[#0A0A0A] border rounded-2xl p-5 transition-all hover:bg-[#050505] group ${isDue ? 'border-amber-500/20' : 'border-white/5'}`}>
+                      <div key={card.id} className={`bg-white border rounded-2xl p-5 transition-all hover:bg-slate-50 group ${isDue ? 'border-amber-200' : 'border-slate-200'}`}>
                         <div className="flex justify-between items-start gap-4">
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold text-slate-200 leading-relaxed mb-2 truncate">{card.question}</p>
-                            <p className="text-xs text-slate-500 leading-relaxed line-clamp-2">{card.answer}</p>
+                            <p className="text-sm font-semibold text-slate-800 leading-relaxed mb-2 truncate">{card.question}</p>
+                            <p className="text-xs text-slate-400 leading-relaxed line-clamp-2">{card.answer}</p>
                           </div>
                           <button onClick={() => handleDeleteCard(card.id)}
-                            className="opacity-0 group-hover:opacity-100 transition text-slate-600 hover:text-red-400 p-1 flex-none">
+                            className="opacity-0 group-hover:opacity-100 transition text-slate-400 hover:text-red-500 p-1 flex-none">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
                           </button>
                         </div>
-                        <div className="flex items-center gap-3 mt-3 pt-3 border-t border-white/5">
-                          <span className={`text-[10px] font-bold uppercase tracking-widest ${isDue ? 'text-amber-400' : 'text-slate-500'}`}>
+                        <div className="flex items-center gap-3 mt-3 pt-3 border-t border-slate-100">
+                          <span className={`text-[10px] font-bold uppercase tracking-widest ${isDue ? 'text-amber-600' : 'text-slate-400'}`}>
                             {isDue ? '⚡ Due now' : `⏱ ${formatNextReview(card.next_review)}`}
                           </span>
                           <span className="text-[10px] text-slate-600 font-medium">·</span>

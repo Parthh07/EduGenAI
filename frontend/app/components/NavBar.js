@@ -13,12 +13,12 @@ const navItems = [
 ];
 
 const colorMap = {
-  slate:   { active: 'text-white',        bg: 'bg-slate-500/20',   ring: 'ring-slate-500/30' },
-  indigo:  { active: 'text-indigo-400',   bg: 'bg-indigo-500/15',  ring: 'ring-indigo-500/30' },
-  cyan:    { active: 'text-cyan-400',     bg: 'bg-cyan-500/15',    ring: 'ring-cyan-500/30' },
-  purple:  { active: 'text-purple-400',   bg: 'bg-purple-500/15',  ring: 'ring-purple-500/30' },
-  emerald: { active: 'text-emerald-400',  bg: 'bg-emerald-500/15', ring: 'ring-emerald-500/30' },
-  amber:   { active: 'text-amber-400',    bg: 'bg-amber-500/15',   ring: 'ring-amber-500/30' },
+  slate:   { active: 'text-slate-700',     bg: 'bg-slate-100',     ring: 'ring-slate-200' },
+  indigo:  { active: 'text-indigo-600',    bg: 'bg-indigo-50',     ring: 'ring-indigo-200' },
+  cyan:    { active: 'text-cyan-600',      bg: 'bg-cyan-50',       ring: 'ring-cyan-200' },
+  purple:  { active: 'text-purple-600',    bg: 'bg-purple-50',     ring: 'ring-purple-200' },
+  emerald: { active: 'text-emerald-600',   bg: 'bg-emerald-50',    ring: 'ring-emerald-200' },
+  amber:   { active: 'text-amber-600',     bg: 'bg-amber-50',      ring: 'ring-amber-200' },
 };
 
 export default function NavBar() {
@@ -31,7 +31,7 @@ export default function NavBar() {
   return (
     <>
       {/* ─── DESKTOP: Slim left sidebar ─── */}
-      <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-[72px] bg-[#050505]/95 backdrop-blur-xl border-r border-white/[0.06] flex-col items-center py-5 z-[60] gap-1">
+      <nav className="hidden md:flex fixed left-0 top-0 bottom-0 w-[72px] bg-white/80 backdrop-blur-xl border-r border-slate-200/80 flex-col items-center py-5 z-[60] gap-1">
         {/* Logo */}
         <div
           className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mb-6 cursor-pointer shadow-lg shadow-indigo-500/20 hover:scale-105 transition-transform"
@@ -55,15 +55,15 @@ export default function NavBar() {
                   relative w-11 h-11 rounded-xl flex items-center justify-center transition-all duration-200 group
                   ${isActive
                     ? `${c.bg} ${c.active} ring-1 ${c.ring} shadow-sm`
-                    : 'text-slate-500 hover:text-slate-300 hover:bg-white/[0.04]'
+                    : 'text-slate-400 hover:text-slate-600 hover:bg-slate-50'
                   }
                 `}
               >
                 <Icon className="w-[18px] h-[18px]" strokeWidth={isActive ? 2.5 : 2} />
                 {/* Tooltip */}
-                <div className="absolute left-full ml-3 px-3 py-2 bg-[#0A0A0A] border border-white/10 rounded-xl text-xs font-bold text-white whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-150 shadow-xl z-[100]">
+                <div className="absolute left-full ml-3 px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800 whitespace-nowrap opacity-0 pointer-events-none group-hover:opacity-100 transition-opacity duration-150 shadow-lg z-[100]">
                   {label}
-                  {desc && <span className="block text-[10px] font-medium text-slate-400 mt-0.5">{desc}</span>}
+                  {desc && <span className="block text-[10px] font-medium text-slate-500 mt-0.5">{desc}</span>}
                 </div>
                 {/* Active indicator bar */}
                 {isActive && (
@@ -75,13 +75,13 @@ export default function NavBar() {
         </div>
 
         {/* Bottom label */}
-        <div className="text-[8px] font-bold text-slate-600 uppercase tracking-widest text-center leading-tight mt-auto">
+        <div className="text-[8px] font-bold text-slate-400 uppercase tracking-widest text-center leading-tight mt-auto">
           Edu<br/>Gen
         </div>
       </nav>
 
       {/* ─── MOBILE: Bottom tab bar ─── */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-[#050505]/95 backdrop-blur-xl border-t border-white/[0.06] z-[60] px-1 pb-[env(safe-area-inset-bottom)]">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 bg-white/80 backdrop-blur-xl border-t border-slate-200/80 z-[60] px-1 pb-[env(safe-area-inset-bottom)]">
         <div className="flex items-center justify-around h-16">
           {navItems.filter(n => n.path !== '/' && n.path !== '/profile').map(({ path, label, icon: Icon, color }) => {
             const isActive = pathname === path;
@@ -94,14 +94,14 @@ export default function NavBar() {
                   flex flex-col items-center justify-center gap-1 w-16 h-14 rounded-xl transition-all duration-200
                   ${isActive
                     ? `${c.active}`
-                    : 'text-slate-500'
+                    : 'text-slate-400'
                   }
                 `}
               >
                 <div className={`relative p-1.5 rounded-lg transition-all ${isActive ? c.bg : ''}`}>
                   <Icon className="w-[18px] h-[18px]" strokeWidth={isActive ? 2.5 : 1.8} />
                 </div>
-                <span className={`text-[9px] font-bold tracking-wide ${isActive ? '' : 'text-slate-600'}`}>
+                <span className={`text-[9px] font-bold tracking-wide ${isActive ? '' : 'text-slate-400'}`}>
                   {label}
                 </span>
               </button>

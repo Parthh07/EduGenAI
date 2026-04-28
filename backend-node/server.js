@@ -14,7 +14,10 @@ const { sequelize, User, Exam, ChatSession, Flashcard, PasswordReset } = require
 
 const app = express();
 const upload = multer({
-  storage: multer.memoryStorage(),
+  storage: multer.diskStorage({
+    destination: (req, file, cb) => cb(null, os.tmpdir()),
+    filename: (req, file, cb) => cb(null, `${Date.now()}_${file.originalname.replace(/[^a-zA-Z0-9.]/g, '_')}`)
+  }),
   fileFilter: (req, file, cb) => {
     const allowed = ['application/pdf', 'image/jpeg', 'image/png', 'image/webp', 'image/jpg'];
     const ext = file.originalname.toLowerCase();
@@ -67,7 +70,14 @@ function buildFileParts(files) {
     else if (ext.endsWith('.jpg') || ext.endsWith('.jpeg')) mimeType = 'image/jpeg';
     else if (ext.endsWith('.png')) mimeType = 'image/png';
     else if (ext.endsWith('.webp')) mimeType = 'image/webp';
-    return { inlineData: { mimeType, data: file.buffer.toString('base64') } };
+    return { inlineData: { mimeType, data: fs.readFileSync(file.path).toString('base64') } };
+  });
+}
+
+function cleanupFiles(files) {
+  if (!files || !Array.isArray(files)) return;
+  files.forEach(f => {
+    try { if (fs.existsSync(f.path)) fs.unlinkSync(f.path); } catch (e) { console.error('Cleanup error:', e); }
   });
 }
 
@@ -106,23 +116,21 @@ app.post('/api/files/upload', requireAuth, upload.array('files'), async (req, re
     for (const file of req.files) {
       if (file.size > MAX_FILE_BYTES) throw new Error(`"${file.originalname}" is too large.`);
       
-      const tempPath = path.join(os.tmpdir(), `${Date.now()}_${file.originalname.replace(/[^a-zA-Z0-9.]/g, '_')}`);
-      fs.writeFileSync(tempPath, file.buffer);
-      
       let mimeType = file.mimetype;
       if (file.originalname.toLowerCase().endsWith('.pdf')) mimeType = 'application/pdf';
       
       const uploadResult = await ai.files.upload({
-        file: tempPath,
+        file: file.path,
         mimeType: mimeType
       });
       
-      fs.unlinkSync(tempPath);
       uploadedUris.push({ uri: uploadResult.uri, mimeType: mimeType, name: file.originalname });
     }
     res.json({ uris: uploadedUris });
   } catch (e) {
     res.status(500).json({ error: classifyError(e) });
+  } finally {
+    cleanupFiles(req.files);
   }
 });
 
@@ -218,6 +226,8 @@ app.post('/generate', requireAuth, upload.array('files'), async (req, res) => {
     res.json(JSON.parse(cleanJson(response)));
   } catch (e) {
     res.status(500).json({ error: classifyError(e) });
+  } finally {
+    cleanupFiles(req.files);
   }
 });
 
@@ -252,6 +262,8 @@ app.post('/generate-exam', requireAuth, upload.array('files'), async (req, res) 
     res.json({ questions });
   } catch (e) {
     res.status(500).json({ error: classifyError(e) });
+  } finally {
+    cleanupFiles(req.files);
   }
 });
 
@@ -327,6 +339,8 @@ app.post('/chat', requireAuth, upload.array('files'), async (req, res) => {
     res.json({ reply });
   } catch (e) {
     res.status(500).json({ error: classifyError(e) });
+  } finally {
+    cleanupFiles(req.files);
   }
 });
 
@@ -536,6 +550,8 @@ No markdown wrapping. Return raw JSON array only.`;
     res.json({ created: created.length, message: `${created.length} flashcards generated and saved!` });
   } catch (e) {
     res.status(500).json({ error: classifyError(e) });
+  } finally {
+    cleanupFiles(req.files);
   }
 });
 
@@ -579,6 +595,8 @@ Be thorough but concise. Use markdown formatting for readability.`;
     res.json({ summary });
   } catch (e) {
     res.status(500).json({ error: classifyError(e) });
+  } finally {
+    cleanupFiles(req.files);
   }
 });
 

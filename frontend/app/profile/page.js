@@ -111,56 +111,56 @@ export default function Profile() {
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-6 selection:bg-indigo-500/30 relative font-sans">
+    <div className="min-h-screen bg-[#FAFBFE] text-slate-900 p-6 selection:bg-indigo-500/20 relative font-sans">
       
       {/* Toast */}
       {toast && (
-        <div className={`fixed top-6 right-6 z-[200] px-5 py-3 rounded-2xl font-bold text-sm shadow-2xl border transition-all animate-in fade-in slide-in-from-top-4 ${toast.type === 'error' ? 'bg-red-500/10 border-red-500/30 text-red-300' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'}`}>
+        <div className={`fixed top-6 right-6 z-[200] px-5 py-3 rounded-2xl font-bold text-sm shadow-lg border transition-all animate-in fade-in slide-in-from-top-4 ${toast.type === 'error' ? 'bg-red-50 border-red-200 text-red-600' : 'bg-emerald-50 border-emerald-200 text-emerald-700'}`}>
           {toast.msg}
         </div>
       )}
 
-      <div className="fixed top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-900/10 via-[#050505] to-[#050505] pointer-events-none z-0" />
+      <div className="fixed top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-100/60 via-[#FAFBFE] to-[#FAFBFE] pointer-events-none z-0" />
 
 
 
 
       <main className="max-w-3xl mx-auto pt-16 pb-20 relative z-10">
         <header className="mb-12 flex items-center gap-6">
-          <div className="w-20 h-20 bg-[#0A0A0A] rounded-2xl flex items-center justify-center text-4xl shadow-xl border border-white/20 font-black">
+          <div className="w-20 h-20 bg-indigo-50 rounded-2xl flex items-center justify-center text-4xl shadow-sm border border-indigo-200 font-black text-indigo-600">
             {(userName || 'U').charAt(0).toUpperCase()}
           </div>
           <div>
-            <h1 className="text-4xl font-bold tracking-tight text-white mb-2">Account Settings</h1>
-            <p className="text-slate-400 text-sm font-medium">Manage your profile and data.</p>
+            <h1 className="text-4xl font-bold tracking-tight text-slate-900 mb-2">Account Settings</h1>
+            <p className="text-slate-500 text-sm font-medium">Manage your profile and data.</p>
           </div>
         </header>
 
         <div className="space-y-6">
           {/* Profile Details */}
-          <div className="bg-[#0A0A0A] border border-white/10 p-8 rounded-3xl shadow-2xl">
-            <h2 className="text-sm font-bold text-slate-200 mb-6 flex items-center gap-2 uppercase tracking-widest border-b border-white/5 pb-3">
+          <div className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm">
+            <h2 className="text-sm font-bold text-slate-800 mb-6 flex items-center gap-2 uppercase tracking-widest border-b border-slate-100 pb-3">
               <span className="w-2 h-2 bg-indigo-500 rounded-full" /> Profile Details
             </h2>
             <div className="space-y-6">
               <div>
                 <label className="block text-[11px] font-bold text-slate-500 mb-2 uppercase tracking-widest">Username</label>
                 <input type="text" value={userName} disabled
-                  className="w-full bg-[#050505] border border-white/10 text-slate-500 rounded-xl px-4 py-3.5 outline-none font-medium cursor-not-allowed shadow-inner text-sm" />
-                <p className="text-[10px] text-slate-600 mt-2 font-medium">Username cannot be changed after registration.</p>
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-400 rounded-xl px-4 py-3.5 outline-none font-medium cursor-not-allowed text-sm" />
+                <p className="text-[10px] text-slate-400 mt-2 font-medium">Username cannot be changed after registration.</p>
               </div>
               <div>
                 <label className="block text-[11px] font-bold text-slate-500 mb-2 uppercase tracking-widest">Email Address</label>
                 <input type="email" value={email} onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#050505] border border-white/10 text-white rounded-xl px-4 py-3.5 outline-none focus:border-white/30 transition-all font-medium shadow-inner text-sm" />
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-4 py-3.5 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all font-medium text-sm" />
               </div>
               <div className="flex gap-3 flex-wrap">
                 <button onClick={handleSaveEmail} disabled={saveLoading}
-                  className="bg-white hover:bg-slate-200 text-black font-bold py-3.5 px-8 rounded-xl transition-all shadow-md text-sm disabled:opacity-60 flex items-center gap-2">
-                  {saveLoading ? <span className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" /> : null}
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3.5 px-8 rounded-xl transition-all shadow-md shadow-indigo-500/20 text-sm disabled:opacity-60 flex items-center gap-2">
+                  {saveLoading ? <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" /> : null}
                   Save Email
                 </button>
-                <button onClick={logout} className="bg-[#050505] hover:bg-white/5 text-rose-400 border border-white/10 font-bold py-3.5 px-8 rounded-xl transition-all shadow-sm text-sm">
+                <button onClick={logout} className="bg-slate-50 hover:bg-red-50 text-rose-600 border border-slate-200 hover:border-red-200 font-bold py-3.5 px-8 rounded-xl transition-all text-sm">
                   Sign Out
                 </button>
               </div>
@@ -168,43 +168,40 @@ export default function Profile() {
           </div>
 
           {/* Data Management */}
-          <div className="bg-[#0A0A0A] border border-white/10 p-8 rounded-3xl shadow-2xl">
-            <h2 className="text-sm font-bold text-slate-200 mb-2 flex items-center gap-2 uppercase tracking-widest border-b border-white/5 pb-3">
+          <div className="bg-white border border-slate-200 p-8 rounded-3xl shadow-sm">
+            <h2 className="text-sm font-bold text-slate-800 mb-2 flex items-center gap-2 uppercase tracking-widest border-b border-slate-100 pb-3">
               <span className="w-2 h-2 bg-rose-500 rounded-full animate-pulse" /> Data Management
             </h2>
-            <p className="text-slate-400 text-[13px] mb-8 leading-relaxed font-medium mt-3">
+            <p className="text-slate-500 text-[13px] mb-8 leading-relaxed font-medium mt-3">
               Permanently delete your data from the database. These actions cannot be undone.
             </p>
             <div className="space-y-3">
-              {/* Clear Exam History */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-[#050505] rounded-2xl border border-amber-500/10 hover:border-amber-500/30 transition-colors">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-amber-50 rounded-2xl border border-amber-200 hover:border-amber-300 transition-colors">
                 <div>
-                  <h3 className="font-bold text-slate-200 text-sm">Delete Exam History</h3>
-                  <p className="text-[11px] text-amber-500/70 mt-1 uppercase tracking-widest font-bold">Removes all exam scores from database</p>
+                  <h3 className="font-bold text-slate-800 text-sm">Delete Exam History</h3>
+                  <p className="text-[11px] text-amber-600 mt-1 uppercase tracking-widest font-bold">Removes all exam scores from database</p>
                 </div>
-                <button onClick={handleClearExams} className="mt-3 md:mt-0 bg-[#0A0A0A] border border-amber-500/20 hover:bg-amber-500/10 text-amber-400 font-bold px-5 py-2.5 rounded-xl text-xs transition-all tracking-wide">
+                <button onClick={handleClearExams} className="mt-3 md:mt-0 bg-white border border-amber-300 hover:bg-amber-100 text-amber-700 font-bold px-5 py-2.5 rounded-xl text-xs transition-all tracking-wide">
                   Delete
                 </button>
               </div>
 
-              {/* Clear Chat Sessions */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-[#050505] rounded-2xl border border-rose-500/10 hover:border-rose-500/30 transition-colors">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-red-50 rounded-2xl border border-red-200 hover:border-red-300 transition-colors">
                 <div>
-                  <h3 className="font-bold text-slate-200 text-sm">Delete All Chat Sessions</h3>
-                  <p className="text-[11px] text-rose-500/70 mt-1 uppercase tracking-widest font-bold">Removes all chat history from database</p>
+                  <h3 className="font-bold text-slate-800 text-sm">Delete All Chat Sessions</h3>
+                  <p className="text-[11px] text-rose-600 mt-1 uppercase tracking-widest font-bold">Removes all chat history from database</p>
                 </div>
-                <button onClick={handleClearChats} className="mt-3 md:mt-0 bg-[#0A0A0A] border border-rose-500/30 hover:bg-rose-500/20 text-rose-400 font-bold px-5 py-2.5 rounded-xl text-xs transition-all tracking-wide shadow-lg shadow-rose-900/10">
+                <button onClick={handleClearChats} className="mt-3 md:mt-0 bg-white border border-rose-300 hover:bg-rose-100 text-rose-700 font-bold px-5 py-2.5 rounded-xl text-xs transition-all tracking-wide">
                   Delete
                 </button>
               </div>
 
-              {/* Clear Flashcards */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-[#050505] rounded-2xl border border-white/5 hover:border-white/10 transition-colors">
+              <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-5 bg-slate-50 rounded-2xl border border-slate-200 hover:border-slate-300 transition-colors">
                 <div>
-                  <h3 className="font-bold text-slate-200 text-sm">Manage Flashcards</h3>
+                  <h3 className="font-bold text-slate-800 text-sm">Manage Flashcards</h3>
                   <p className="text-[11px] text-slate-500 mt-1 uppercase tracking-widest font-bold">Delete individual cards from review page</p>
                 </div>
-                <button onClick={() => router.push('/flashcards')} className="mt-3 md:mt-0 bg-[#0A0A0A] border border-white/10 hover:bg-white/5 text-slate-300 font-bold px-5 py-2.5 rounded-xl text-xs transition-all tracking-wide">
+                <button onClick={() => router.push('/flashcards')} className="mt-3 md:mt-0 bg-white border border-slate-200 hover:bg-slate-100 text-slate-600 font-bold px-5 py-2.5 rounded-xl text-xs transition-all tracking-wide">
                   Go to Flashcards
                 </button>
               </div>

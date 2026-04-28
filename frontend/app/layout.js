@@ -1,30 +1,33 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from './context/AuthContext';
 import { FileProvider } from './context/FileContext';
 import NavBar from './components/NavBar';
 import NavWrapper from './components/NavWrapper';
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
+  display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export const metadata = {
   title: "EduGen AI",
-  description: "Intelligent Study Material Generator",
+  description: "Intelligent Study Material Generator — AI-powered study synthesis, exam simulation, and flashcard review.",
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased relative`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased relative`}
+        style={{ fontFamily: "var(--font-inter), system-ui, -apple-system, sans-serif" }}
       >
         <AuthProvider>
           <FileProvider>

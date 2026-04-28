@@ -2,6 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../context/AuthContext';
+import SpotlightCard from '../components/SpotlightCard';
+import Skeleton from '../components/Skeleton';
+import { motion } from 'framer-motion';
 
 export default function DashboardMode() {
   const { user, loading: authLoading } = useAuth();
@@ -108,36 +111,46 @@ export default function DashboardMode() {
         </defs>
         {/* Grid lines */}
         {[0, 25, 50, 75, 100].map(y => (
-          <line key={y} x1={PAD} y1={toY(y)} x2={W - PAD} y2={toY(y)} stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+          <line key={y} x1={PAD} y1={toY(y)} x2={W - PAD} y2={toY(y)} stroke="rgba(0,0,0,0.06)" strokeWidth="1" />
         ))}
         {/* Fill */}
         <polygon points={fillPoints} fill="url(#chartGrad)" />
         {/* Line */}
-        <polyline points={points} fill="none" stroke="#8b5cf6" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" />
+        <motion.polyline 
+          initial={{ pathLength: 0 }} 
+          animate={{ pathLength: 1 }} 
+          transition={{ duration: 1.5, ease: "easeInOut" }}
+          points={points} fill="none" stroke="#8b5cf6" strokeWidth="2.5" strokeLinejoin="round" strokeLinecap="round" 
+        />
         {/* Dots */}
         {chartData.map((d, i) => (
-          <g key={i}>
-            <circle cx={toX(i)} cy={toY(d.pct)} r="4" fill="#050505" stroke="#8b5cf6" strokeWidth="2" />
-          </g>
+          <motion.g 
+            key={i}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.3, delay: 1 + (i * 0.05) }}
+          >
+            <circle cx={toX(i)} cy={toY(d.pct)} r="4" fill="#FAFBFE" stroke="#8b5cf6" strokeWidth="2" />
+          </motion.g>
         ))}
       </svg>
     );
   };
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white p-6 selection:bg-purple-500/30 relative font-sans">
-      <div className="fixed top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-900/10 via-[#050505] to-[#050505] pointer-events-none z-0" />
+    <div className="min-h-screen bg-[#FAFBFE] text-slate-900 p-6 selection:bg-purple-500/20 relative font-sans">
+      <div className="fixed top-0 inset-x-0 h-[500px] bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-purple-100/60 via-[#FAFBFE] to-[#FAFBFE] pointer-events-none z-0" />
 
 
 
 
       <main className="max-w-4xl mx-auto pt-16 pb-20 relative z-10">
         <header className="text-center mb-12">
-          <div className="w-12 h-12 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center mx-auto mb-6">
-            <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+          <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-center mx-auto mb-6">
+            <svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-white mb-3">Progress Analytics</h1>
-          <p className="text-slate-400 text-sm md:text-base font-medium">Track your learning velocity, score trends, and exam history.</p>
+          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-3">Progress Analytics</h1>
+          <p className="text-slate-500 text-sm md:text-base font-medium">Track your learning velocity, score trends, and exam history.</p>
         </header>
 
         {/* Stat Cards */}
@@ -148,41 +161,47 @@ export default function DashboardMode() {
             { label: 'Best Score', value: `${bestScore}%`, color: 'emerald' },
             { label: 'Day Streak 🔥', value: streak, color: streak > 0 ? 'amber' : 'slate' },
           ].map(({ label, value, color }) => (
-            <div key={label} className="bg-[#0A0A0A] border border-white/10 p-6 rounded-3xl shadow-xl flex flex-col items-center justify-center text-center">
-              <h3 className={`text-${color}-400 font-bold uppercase tracking-widest text-[10px] mb-2`}>{label}</h3>
-              <p className="text-4xl font-black text-white">{dataLoading ? '—' : value}</p>
-            </div>
+            <SpotlightCard key={label} className="!bg-white !rounded-3xl shadow-sm text-center border border-slate-200 hover:border-slate-300">
+              <div className="p-6 flex flex-col items-center justify-center h-full w-full">
+                <h3 className={`text-${color}-600 font-bold uppercase tracking-widest text-[10px] mb-2`}>{label}</h3>
+                <p className="text-4xl font-black text-slate-900">{dataLoading ? '—' : value}</p>
+              </div>
+            </SpotlightCard>
           ))}
         </div>
 
         {/* Exam type breakdown */}
         <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="bg-[#0A0A0A] border border-white/10 p-5 rounded-2xl flex justify-between items-center">
-            <div>
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">MCQ Exams</p>
-              <p className="text-2xl font-black text-white">{mcqCount}</p>
+          <SpotlightCard className="!bg-white !rounded-2xl shadow-sm border border-slate-200">
+            <div className="p-5 flex justify-between items-center h-full w-full">
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">MCQ Exams</p>
+                <p className="text-2xl font-black text-slate-900">{mcqCount}</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center">
+                <span className="text-cyan-600 text-sm font-bold">M</span>
+              </div>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
-              <span className="text-cyan-400 text-sm font-bold">M</span>
+          </SpotlightCard>
+          <SpotlightCard className="!bg-white !rounded-2xl shadow-sm border border-slate-200">
+            <div className="p-5 flex justify-between items-center h-full w-full">
+              <div>
+                <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Theory Exams</p>
+                <p className="text-2xl font-black text-slate-900">{theoryCount}</p>
+              </div>
+              <div className="w-10 h-10 rounded-xl bg-indigo-50 border border-indigo-200 flex items-center justify-center">
+                <span className="text-indigo-600 text-sm font-bold">T</span>
+              </div>
             </div>
-          </div>
-          <div className="bg-[#0A0A0A] border border-white/10 p-5 rounded-2xl flex justify-between items-center">
-            <div>
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">Theory Exams</p>
-              <p className="text-2xl font-black text-white">{theoryCount}</p>
-            </div>
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
-              <span className="text-indigo-400 text-sm font-bold">T</span>
-            </div>
-          </div>
+          </SpotlightCard>
         </div>
 
         {/* Score Trend Chart */}
         {chartData.length >= 2 && (
-          <div className="bg-[#0A0A0A] border border-white/10 p-6 rounded-3xl shadow-xl mb-8">
+          <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm mb-8">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-sm font-bold text-white uppercase tracking-widest">Score Trend</h2>
+                <h2 className="text-sm font-bold text-slate-900 uppercase tracking-widest">Score Trend</h2>
                 <p className="text-[11px] text-slate-500 mt-1">Last {chartData.length} assessments</p>
               </div>
               <div className="flex items-center gap-2">
@@ -209,15 +228,17 @@ export default function DashboardMode() {
         )}
 
         {/* History Table */}
-        <h2 className="text-lg font-bold mb-6 text-white uppercase tracking-widest border-b border-white/10 pb-4">Exam History</h2>
+        <h2 className="text-lg font-bold mb-6 text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-4">Exam History</h2>
         
         {dataLoading ? (
-          <div className="bg-[#0A0A0A] border border-white/10 p-12 rounded-3xl text-center">
-            <span className="w-8 h-8 border-2 border-purple-500/30 border-t-purple-400 rounded-full animate-spin inline-block" />
+          <div className="space-y-3">
+            {[1, 2, 3].map((n) => (
+              <Skeleton key={n} className="w-full h-24 rounded-2xl" />
+            ))}
           </div>
         ) : totalExams === 0 ? (
-          <div className="bg-[#0A0A0A] border border-white/10 p-12 rounded-3xl text-center text-slate-500 text-sm font-medium shadow-xl">
-            No exams yet. Head to <button onClick={() => router.push('/exam')} className="text-cyan-400 hover:underline">Exam Simulator</button> to get started.
+          <div className="bg-white border border-slate-200 p-12 rounded-3xl text-center text-slate-500 text-sm font-medium shadow-sm">
+            No exams yet. Head to <button onClick={() => router.push('/exam')} className="text-cyan-600 hover:underline">Exam Simulator</button> to get started.
           </div>
         ) : (
           <div className="space-y-3">
@@ -226,26 +247,26 @@ export default function DashboardMode() {
               const percentage = Math.round((exam.score / total) * 100);
               const diff = exam.difficulty || 'medium';
               const type = exam.exam_type || 'MCQ';
-              const diffColor = { easy: 'text-emerald-400', medium: 'text-amber-400', hard: 'text-red-400' }[diff] || 'text-slate-400';
+              const diffColor = { easy: 'text-emerald-600', medium: 'text-amber-600', hard: 'text-red-600' }[diff] || 'text-slate-400';
               return (
-                <div key={idx} className="bg-[#0A0A0A] border border-white/5 p-5 md:p-6 rounded-2xl flex justify-between items-center transition-all hover:bg-[#050505] hover:border-white/20">
+                <div key={idx} className="bg-white border border-slate-200 p-5 md:p-6 rounded-2xl flex justify-between items-center transition-all hover:bg-slate-50 hover:border-slate-300 shadow-sm">
                   <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-[#050505] border border-white/5 flex items-center justify-center hidden sm:flex">
-                      <span className="text-xs font-bold text-slate-400">{type === 'MCQ' ? 'M' : 'T'}</span>
+                    <div className="w-10 h-10 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center hidden sm:flex">
+                      <span className="text-xs font-bold text-slate-500">{type === 'MCQ' ? 'M' : 'T'}</span>
                     </div>
                     <div>
-                      <h3 className="text-base font-bold text-slate-200">{type} Assessment</h3>
+                      <h3 className="text-base font-bold text-slate-800">{type} Assessment</h3>
                       <p className="text-[11px] text-slate-500 mt-1 uppercase tracking-widest font-bold">
                         {new Date(exam.createdAt).toLocaleDateString()} · <span className={diffColor}>{diff}</span>
                       </p>
                     </div>
                   </div>
                   <div className="text-right flex flex-col items-end">
-                    <p className={`text-xl font-bold font-mono tracking-tighter ${percentage >= 80 ? 'text-emerald-400' : percentage >= 50 ? 'text-slate-300' : 'text-red-400'}`}>
+                    <p className={`text-xl font-bold font-mono tracking-tighter ${percentage >= 80 ? 'text-emerald-600' : percentage >= 50 ? 'text-slate-600' : 'text-red-600'}`}>
                       {exam.score}/{total}
                     </p>
                     <div className="mt-1 flex items-center gap-2">
-                      <div className="w-16 h-1 bg-[#050505] rounded-full overflow-hidden">
+                      <div className="w-16 h-1 bg-slate-100 rounded-full overflow-hidden">
                         <div className={`h-full ${percentage >= 80 ? 'bg-emerald-500' : percentage >= 50 ? 'bg-slate-400' : 'bg-red-500'}`} style={{width: `${percentage}%`}} />
                       </div>
                       <p className="text-[10px] text-slate-500 font-bold w-6 text-right">{percentage}%</p>

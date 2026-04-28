@@ -1,6 +1,9 @@
 "use client";
 import { usePathname } from 'next/navigation';
 
+import { AnimatePresence } from 'framer-motion';
+import PageTransition from './PageTransition';
+
 const noNavPages = ['/', '/login', '/signup'];
 
 export default function NavWrapper({ children }) {
@@ -9,7 +12,11 @@ export default function NavWrapper({ children }) {
 
   return (
     <div className={hideNav ? '' : 'md:pl-[72px] pb-20 md:pb-0'}>
-      {children}
+      <AnimatePresence mode="wait">
+        <PageTransition key={pathname}>
+          {children}
+        </PageTransition>
+      </AnimatePresence>
     </div>
   );
 }
